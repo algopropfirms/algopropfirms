@@ -1,0 +1,78 @@
+---
+const posts = [
+  {
+    slug: "best-prop-firms-algo-trading-2026",
+    title: "Best Prop Firms for Algo Trading in 2026",
+    description: "Which futures prop firms actually allow automated trading in 2026? We compare Apex, Topstep, MyFundedFutures, Take Profit Trader, and TradeDay.",
+    pubDate: "May 2, 2026"
+  },
+  {
+    slug: "apex-vs-topstep-algo-traders",
+    title: "Apex Trader Funding vs Topstep for Algo Traders (2026)",
+    description: "Head-to-head comparison of Apex and Topstep for automated futures trading. Rules, costs, drawdown types, and which is better for bots.",
+    pubDate: "May 2, 2026"
+  },
+  {
+    slug: "myfundedfutures-automation-rules",
+    title: "MyFundedFutures Automation Rules: What Changed in 2025",
+    description: "MyFundedFutures reversed its automation ban in July 2025. Here's what the new rules mean for algo traders and what most comparison sites got wrong.",
+    pubDate: "May 2, 2026"
+  },
+  {
+    slug: "trailing-vs-eod-drawdown-algo-bots",
+    title: "Trailing vs End-of-Day Drawdown: Which Rule is Better for Algo Bots?",
+    description: "Drawdown type is one of the most important rules for automated traders. Here's how trailing and EOD drawdown work and which to choose for your bot.",
+    pubDate: "May 2, 2026"
+  },
+  {
+    slug: "how-to-pass-prop-firm-eval-algo-bot",
+    title: "How to Pass a Prop Firm Evaluation With an Algo Bot",
+    description: "A practical guide to passing prop firm evaluations using an automated trading bot. Covers firm selection, bot configuration, risk settings, and common failure modes.",
+    pubDate: "May 2, 2026"
+  }
+];
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Algo Trading Blog | Algo Prop Firms</title>
+  <meta name="description" content="Guides and comparisons for futures traders using algorithmic and automated trading strategies at prop firms." />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; line-height: 1.6; }
+    .header { background: #1a1d2e; border-bottom: 1px solid #2d3148; padding: 2rem 1rem; text-align: center; }
+    .header h1 { font-size: 1.6rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.4rem; }
+    .header p { color: #94a3b8; font-size: 0.9rem; }
+    .header a { color: #6366f1; text-decoration: none; font-size: 0.85rem; }
+    .container { max-width: 780px; margin: 0 auto; padding: 2rem 1rem; }
+    .post-list { list-style: none; }
+    .post-item { border-bottom: 1px solid #1e293b; padding: 1.5rem 0; }
+    .post-item:last-child { border-bottom: none; }
+    .post-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 0.4rem; }
+    .post-title a { color: #f8fafc; text-decoration: none; }
+    .post-title a:hover { color: #6366f1; }
+    .post-desc { color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.4rem; }
+    .post-date { color: #64748b; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Algo Trading Articles</h1>
+    <p>Guides for futures traders using automated and algorithmic strategies</p>
+    <p style="margin-top:0.5rem"><a href="/">← Back to Firm Comparison Table</a></p>
+  </header>
+  <div class="container">
+    <ul class="post-list">
+      {posts.map(post => (
+        <li class="post-item">
+          <div class="post-title"><a href={`/blog/${post.slug}`}>{post.title}</a></div>
+          <div class="post-desc">{post.description}</div>
+          <div class="post-date">{post.pubDate}</div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</body>
+</html>

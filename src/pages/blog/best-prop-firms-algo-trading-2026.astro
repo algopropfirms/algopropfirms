@@ -1,0 +1,113 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+---
+<BlogPost
+  title="Best Prop Firms for Algo Trading in 2026"
+  description="Which futures prop firms actually allow automated trading in 2026? We compare Apex, Topstep, MyFundedFutures, Take Profit Trader, and TradeDay on automation rules, costs, and drawdown types."
+  pubDate="May 2, 2026"
+>
+
+<p>If you're running an automated trading strategy, not all prop firms are created equal. Automation rules vary widely — and they change without warning. This guide covers the five major futures prop firms that currently allow algorithmic trading, based on policies verified directly from each firm's documentation.</p>
+
+<h2>Which Prop Firms Allow Algo Trading in 2026?</h2>
+
+<p>As of May 2026, the following firms explicitly permit automated and algorithmic trading:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Firm</th>
+      <th>Automation</th>
+      <th>$50K Eval</th>
+      <th>Drawdown</th>
+      <th>Payout Split</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Apex Trader Funding</strong></td>
+      <td><span class="badge badge-allowed">Allowed</span></td>
+      <td>$167/mo</td>
+      <td>Trailing</td>
+      <td>100%</td>
+    </tr>
+    <tr>
+      <td><strong>MyFundedFutures</strong></td>
+      <td><span class="badge badge-allowed">Allowed</span></td>
+      <td>$165/mo</td>
+      <td>Trailing</td>
+      <td>90%</td>
+    </tr>
+    <tr>
+      <td><strong>Topstep</strong></td>
+      <td><span class="badge badge-allowed">Allowed</span></td>
+      <td>$149/mo</td>
+      <td>Trailing</td>
+      <td>100%</td>
+    </tr>
+    <tr>
+      <td><strong>Take Profit Trader</strong></td>
+      <td><span class="badge badge-allowed">Allowed</span></td>
+      <td>$150/mo</td>
+      <td>End-of-Day</td>
+      <td>90%</td>
+    </tr>
+    <tr>
+      <td><strong>TradeDay</strong></td>
+      <td><span class="badge badge-allowed">Allowed</span></td>
+      <td>$150/mo</td>
+      <td>End-of-Day</td>
+      <td>90%</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Apex Trader Funding</h2>
+
+<p>Apex explicitly permits automated trading, DCA bots, and semi-automated systems. A March 2026 overhaul removed the 30% consistency rule and recurring fees, making it more bot-friendly than before. The 100% payout split on the first $25,000 per account is the highest in the industry. Apex supports Tradovate, Rithmic, and NinjaTrader.</p>
+
+<p>The main risk for algo traders: Apex uses trailing drawdown, which moves up with your highest equity. If your bot runs up profits then gives them back, your drawdown threshold moves against you. Bots with high drawdown between winning trades need careful risk management.</p>
+
+<h2>MyFundedFutures (MFFU)</h2>
+
+<p>MFFU reversed its automation ban in July 2025 — a significant change that most comparison sites have not yet updated. Before July 2025, automated trading was prohibited. Now it's explicitly allowed. If you're using an older source that says MFFU bans automation, that information is outdated.</p>
+
+<p>MFFU uses trailing drawdown and has a 30% consistency rule, meaning no single day can account for more than 30% of your total profits. This can be a constraint for bots that occasionally have large winning days.</p>
+
+<h2>Topstep</h2>
+
+<p>Topstep allows automated trading with one exception: VPS usage is banned on legacy accounts only. New accounts have no VPS restriction. Topstep uses trailing drawdown and offers 100% payout on the first $10,000 per month, then 90% beyond that.</p>
+
+<p>Topstep's evaluation is subscription-based with no time limit, which suits bots that trade selectively rather than every day.</p>
+
+<h2>Take Profit Trader</h2>
+
+<p>Take Profit Trader uses end-of-day drawdown during both the evaluation and funded phases. For algo traders, EOD drawdown is generally more forgiving than trailing — your drawdown threshold only adjusts at end of day, not intraday. This gives bots more room to experience intraday fluctuation without getting stopped out.</p>
+
+<p>TPT's one-step evaluation structure is simpler than multi-step programs, reducing the total time and cost to get funded.</p>
+
+<h2>TradeDay</h2>
+
+<p>TradeDay also uses end-of-day drawdown and explicitly allows automated strategies. It supports Tradovate and Rithmic. TradeDay tends to have fewer restrictions on trading hours compared to some competitors, which matters for bots running outside the standard US session.</p>
+
+<h2>Which Firm is Best for Algo Traders?</h2>
+
+<p>The right choice depends on your bot's characteristics:</p>
+
+<ul>
+  <li><strong>High-frequency or intraday bots with drawdown:</strong> Take Profit Trader or TradeDay (EOD drawdown is more forgiving)</li>
+  <li><strong>Consistent daily strategy with tight risk:</strong> Apex or Topstep (trailing drawdown is fine if your bot is disciplined)</li>
+  <li><strong>Multi-account scaling:</strong> Apex (allows up to 20 accounts simultaneously)</li>
+  <li><strong>Lowest cost to get started:</strong> Topstep at $149/mo for the $50K eval</li>
+</ul>
+
+<div class="cta">
+  <p>See the full comparison table with live-updated rules for all five firms.</p>
+  <a href="/">View Full Comparison Table →</a>
+</div>
+
+<div class="disclaimer">
+  <strong>Important:</strong> Prop firm automation rules change frequently and without notice. Always verify the current policy directly with the firm before purchasing an evaluation. Rules on this page were verified May 2026.
+</div>
+
+</BlogPost>

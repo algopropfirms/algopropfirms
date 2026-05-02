@@ -1,0 +1,92 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+---
+<BlogPost
+  title="How to Pass a Prop Firm Evaluation With an Algo Bot"
+  description="A practical guide to passing prop firm evaluations using an automated trading bot. Covers firm selection, bot configuration, risk settings, and common failure modes."
+  pubDate="May 2, 2026"
+>
+
+<p>Passing a prop firm evaluation with an algo bot is different from passing manually. The rules are the same, but bots introduce specific failure modes that human traders rarely encounter. This guide covers the full process: choosing the right firm, configuring your bot for evaluation constraints, and avoiding the most common automated trading pitfalls.</p>
+
+<h2>Step 1: Choose the Right Firm for Your Bot</h2>
+
+<p>Not all firms that allow automation are equal for your specific strategy. Before paying for an evaluation, answer these questions about your bot:</p>
+
+<ul>
+  <li><strong>What is your bot's average intraday drawdown?</strong> If high, choose EOD drawdown (Take Profit Trader or TradeDay)</li>
+  <li><strong>Does your bot have consistent daily returns or occasional large days?</strong> If inconsistent, avoid firms with consistency rules (MFFU has a 30% rule)</li>
+  <li><strong>How many contracts does your bot trade?</strong> Each firm has contract limits during evaluation</li>
+  <li><strong>What platform does your bot run on?</strong> Tradovate is the most API-friendly; check compatibility</li>
+</ul>
+
+<h2>Step 2: Size Your Bot's Risk to Evaluation Rules</h2>
+
+<p>This is where most algo traders fail. They test their bot with one set of risk parameters and run the evaluation with the same parameters — without accounting for the evaluation's specific drawdown limits.</p>
+
+<p>Calculate your bot's maximum expected drawdown from backtests, then size down until that drawdown is 60-70% of the firm's limit. This leaves buffer for live market conditions being worse than historical conditions.</p>
+
+<p>Example: Apex $50K evaluation has $2,500 trailing drawdown. If your bot's backtested max drawdown is $1,800 at standard sizing, reduce size by 30% so your expected max drawdown is around $1,260. You now have meaningful buffer.</p>
+
+<h2>Step 3: Account for Trailing Drawdown in Your Live Configuration</h2>
+
+<p>If you're at a firm with trailing drawdown (Apex, Topstep, MFFU), your bot needs to be aware that open profits reduce your effective buffer. Consider these adjustments:</p>
+
+<ul>
+  <li>Add a profit-lock rule: once a position is up X ticks, move stop to breakeven</li>
+  <li>Reduce maximum open position size during the evaluation phase</li>
+  <li>Avoid running the bot during high-volatility news events where open positions can spike and reverse</li>
+</ul>
+
+<h2>Step 4: Handle the Evaluation Profit Target</h2>
+
+<p>Most evaluations require you to reach a profit target. For bots, this means you need enough trading days with the right market conditions. A few practical considerations:</p>
+
+<ul>
+  <li><strong>Don't force trades:</strong> Bots that trade every day regardless of conditions will degrade performance. If your strategy has a signal filter, keep it active during evaluation.</li>
+  <li><strong>Time limits:</strong> Some firms have no time limit (Topstep's subscription model). Others have 30 or 60-day windows. Know your firm's rules.</li>
+  <li><strong>Minimum trading days:</strong> Most firms require a minimum number of profitable trading days (typically 5+). Your bot needs to trade at least that many days.</li>
+</ul>
+
+<h2>Step 5: Use Multiple Evaluation Accounts</h2>
+
+<p>One of the biggest advantages of algo trading at prop firms is the ability to run the same bot across multiple evaluation accounts simultaneously. Firms like Apex explicitly allow this.</p>
+
+<p>Instead of buying one $250 evaluation, buy five $50 evaluations. Run your bot across all five accounts with account synchronization. The bot trades identically on all accounts. When some accounts pass and some don't (due to timing of entry on each account), you're effectively spreading the statistical variance of your evaluation outcomes.</p>
+
+<p>This is mathematically more efficient than single large evaluations when your bot has consistent but not perfect expectancy.</p>
+
+<h2>Common Failure Modes for Algo Traders</h2>
+
+<h3>Failure mode 1: Slippage worse than expected</h3>
+<p>Backtests often use fill prices that are better than live execution. In fast markets, your bot may get filled worse than expected. Always add a slippage buffer to your backtested results before sizing for a live evaluation.</p>
+
+<h3>Failure mode 2: Platform connectivity issues</h3>
+<p>If your bot loses connection to the broker API mid-position, you may end up with an open position and no active management. Set up alerts for disconnection and ensure your broker has appropriate stop-loss orders resting on the exchange.</p>
+
+<h3>Failure mode 3: Overfitting to backtested conditions</h3>
+<p>A bot that looks great on historical data may fail on live data if the backtest was overfitted. Use out-of-sample data for validation before trusting a bot with a real evaluation.</p>
+
+<h3>Failure mode 4: Ignoring trading hour restrictions</h3>
+<p>Some firms restrict trading around major news events. Make sure your bot either avoids these windows or is configured to not trade during restricted times. An automated position opened during a prohibited window can result in account violation.</p>
+
+<h2>Which Firm to Start With</h2>
+
+<p>For most algo traders running their first prop firm evaluation:</p>
+
+<ul>
+  <li><strong>Most forgiving for bots with drawdown:</strong> Take Profit Trader (EOD drawdown, no daily loss limit)</li>
+  <li><strong>Best for scaling once proven:</strong> Apex (20 simultaneous accounts, 100% payout)</li>
+  <li><strong>Lowest entry cost:</strong> Topstep at $149/mo for $50K</li>
+</ul>
+
+<div class="cta">
+  <p>Compare evaluation rules, costs, and automation policies across all five firms.</p>
+  <a href="/">View Full Comparison Table →</a>
+</div>
+
+<div class="disclaimer">
+  <strong>Important:</strong> Rules verified May 2026. Prop firm evaluation rules change frequently. Always verify current requirements directly with your chosen firm before purchasing.
+</div>
+
+</BlogPost>

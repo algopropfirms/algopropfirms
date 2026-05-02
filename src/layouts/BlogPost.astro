@@ -1,0 +1,60 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  pubDate: string;
+}
+const { title, description, pubDate } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} | Algo Prop Firms</title>
+  <meta name="description" content={description} />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e2e8f0; line-height: 1.7; }
+    .header { background: #1a1d2e; border-bottom: 1px solid #2d3148; padding: 1rem 1rem; text-align: center; }
+    .header a { color: #6366f1; text-decoration: none; font-size: 0.9rem; }
+    .header a:hover { text-decoration: underline; }
+    .container { max-width: 780px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    h1 { font-size: 2rem; font-weight: 700; color: #f8fafc; margin-bottom: 0.5rem; line-height: 1.3; }
+    .meta { font-size: 0.82rem; color: #64748b; margin-bottom: 2rem; }
+    h2 { font-size: 1.3rem; font-weight: 600; color: #f8fafc; margin: 2rem 0 0.75rem; }
+    h3 { font-size: 1.1rem; font-weight: 600; color: #94a3b8; margin: 1.5rem 0 0.5rem; }
+    p { margin-bottom: 1rem; color: #cbd5e1; }
+    ul, ol { margin: 0.5rem 0 1rem 1.5rem; color: #cbd5e1; }
+    li { margin-bottom: 0.4rem; }
+    a { color: #6366f1; }
+    a:hover { text-decoration: underline; }
+    table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.88rem; }
+    thead { background: #1a1d2e; }
+    thead th { padding: 0.6rem 0.8rem; text-align: left; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; border-bottom: 1px solid #1e293b; }
+    tbody tr { border-bottom: 1px solid #1a1d2e; }
+    tbody td { padding: 0.7rem 0.8rem; }
+    .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+    .badge-allowed { background: #14532d; color: #4ade80; }
+    .badge-banned { background: #450a0a; color: #f87171; }
+    .disclaimer { margin-top: 2rem; padding: 1rem; background: #1a1d2e; border-radius: 8px; border-left: 3px solid #6366f1; font-size: 0.82rem; color: #64748b; }
+    .cta { margin: 2.5rem 0; padding: 1.5rem; background: #1a1d2e; border-radius: 8px; border: 1px solid #2d3148; text-align: center; }
+    .cta p { color: #94a3b8; margin-bottom: 0.75rem; }
+    .cta a { display: inline-block; background: #6366f1; color: white; padding: 0.6rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+    .cta a:hover { background: #4f46e5; }
+    .nav-back { display: inline-block; margin-bottom: 1.5rem; color: #6366f1; text-decoration: none; font-size: 0.9rem; }
+    .nav-back:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="/">← Algo Prop Firms Tracker — Full Comparison Table</a>
+  </header>
+  <div class="container">
+    <a href="/blog" class="nav-back">← All Articles</a>
+    <h1>{title}</h1>
+    <p class="meta">Published {pubDate} · AlgoPropFirms.com</p>
+    <slot />
+  </div>
+</body>
+</html>

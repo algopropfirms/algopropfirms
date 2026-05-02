@@ -1,0 +1,88 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+---
+<BlogPost
+  title="Apex Trader Funding vs Topstep for Algo Traders (2026)"
+  description="Head-to-head comparison of Apex and Topstep for automated futures trading. Rules, costs, drawdown types, and which is better for bots."
+  pubDate="May 2, 2026"
+>
+
+<p>Apex Trader Funding and Topstep are the two most popular futures prop firms for algo traders. Both explicitly allow automation — but they differ significantly in cost structure, drawdown mechanics, and account rules. This comparison focuses specifically on what matters for automated strategies.</p>
+
+<h2>Side-by-Side Comparison</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>Apex Trader Funding</th>
+      <th>Topstep</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Automation</td><td><span class="badge badge-allowed">Allowed</span></td><td><span class="badge badge-allowed">Allowed</span></td></tr>
+    <tr><td>$50K Eval Cost</td><td>$167/mo</td><td>$149/mo</td></tr>
+    <tr><td>$100K Eval Cost</td><td>$207/mo</td><td>$199/mo</td></tr>
+    <tr><td>Drawdown Type</td><td>Trailing</td><td>Trailing</td></tr>
+    <tr><td>$50K Drawdown</td><td>$2,500</td><td>$2,000</td></tr>
+    <tr><td>Consistency Rule</td><td>None</td><td>None</td></tr>
+    <tr><td>Payout Split</td><td>100% (first $25K/account)</td><td>100% (first $10K/mo)</td></tr>
+    <tr><td>Max Accounts</td><td>20</td><td>Not specified</td></tr>
+    <tr><td>Platforms</td><td>Tradovate, Rithmic, NinjaTrader</td><td>Tradovate, NinjaTrader</td></tr>
+    <tr><td>VPS Allowed</td><td>Yes</td><td>Yes (new accounts)</td></tr>
+  </tbody>
+</table>
+
+<h2>Drawdown: The Most Important Difference for Bots</h2>
+
+<p>Both firms use trailing drawdown — meaning the drawdown threshold moves up as your account equity rises, but never moves down. For algo traders, this is the single most important rule to understand.</p>
+
+<p>Apex gives you $2,500 of drawdown on the $50K eval. Topstep gives you $2,000. The extra $500 at Apex matters if your bot has any period of drawdown before reaching its targets. A bot that regularly pulls back $1,800 between winning streaks would survive at Apex but be uncomfortably close to the limit at Topstep.</p>
+
+<p>Neither firm has a consistency rule, which is a major advantage for bots that occasionally generate large wins on specific setups.</p>
+
+<h2>Cost Structure</h2>
+
+<p>Topstep is slightly cheaper: $149/mo vs $167/mo for the $50K eval. Over a 3-month evaluation period, that's about $54 less. Not a major factor, but relevant if you're running multiple eval accounts in parallel.</p>
+
+<p>Both firms eliminated recurring fees on funded accounts as of early 2026. You pay the monthly eval fee until you pass, then nothing until you request a payout.</p>
+
+<h2>Multi-Account Scaling</h2>
+
+<p>Apex explicitly allows up to 20 simultaneous funded accounts. This is critical for algo traders using account synchronization — you run one bot and mirror trades across multiple funded accounts, multiplying your effective capital and payout potential.</p>
+
+<p>Topstep does not publish a specific account limit. In practice, experienced traders run multiple accounts at both firms, but Apex's explicit policy is cleaner for large-scale automation.</p>
+
+<h2>Platform Support</h2>
+
+<p>Both support Tradovate and NinjaTrader. Apex additionally supports Rithmic, giving more flexibility if your bot is built on a Rithmic-compatible platform. Tradovate is the most popular choice for algo traders due to its API access and automation-friendly infrastructure.</p>
+
+<h2>Which Should You Choose?</h2>
+
+<p>Choose <strong>Apex</strong> if:</p>
+<ul>
+  <li>You plan to scale to multiple funded accounts</li>
+  <li>Your bot occasionally has larger drawdown between wins</li>
+  <li>You use Rithmic-based platforms</li>
+  <li>You want the 100% payout with no monthly cap per account</li>
+</ul>
+
+<p>Choose <strong>Topstep</strong> if:</p>
+<ul>
+  <li>You want the lowest possible evaluation cost</li>
+  <li>Your bot has tight drawdown and doesn't need the extra $500 buffer</li>
+  <li>You prefer Topstep's support structure</li>
+</ul>
+
+<p>For most algo traders running a systematic strategy with controlled drawdown, the difference is small. Apex's multi-account scaling advantage becomes significant once you're funded and looking to grow.</p>
+
+<div class="cta">
+  <p>Compare all five algo-friendly prop firms in one table.</p>
+  <a href="/">View Full Comparison Table →</a>
+</div>
+
+<div class="disclaimer">
+  <strong>Important:</strong> Rules verified May 2026. Prop firm policies change frequently — always verify directly with the firm before purchasing.
+</div>
+
+</BlogPost>

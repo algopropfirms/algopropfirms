@@ -1,0 +1,74 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+---
+<BlogPost
+  title="MyFundedFutures Automation Rules: What Changed in 2025"
+  description="MyFundedFutures reversed its automation ban in July 2025. Here's what the new rules mean for algo traders and what most comparison sites got wrong."
+  pubDate="May 2, 2026"
+>
+
+<p>MyFundedFutures (MFFU) made a significant policy change in July 2025: it reversed a previous ban on automated trading and now explicitly allows algorithmic strategies. As of May 2026, most comparison sites have not updated their information and still list MFFU as banning automation. This article explains what actually changed and what it means for algo traders.</p>
+
+<h2>What Changed in July 2025</h2>
+
+<p>Prior to July 2025, MyFundedFutures explicitly prohibited automated trading. Traders using bots or algorithmic execution risked account termination. This put MFFU off-limits for the growing segment of futures traders running systematic strategies.</p>
+
+<p>In July 2025, MFFU reversed this policy. Automated trading is now permitted on both evaluation and funded accounts. The firm supports Tradovate and Rithmic, both of which have APIs suitable for automated order execution.</p>
+
+<h2>Current Automation Rules at MFFU</h2>
+
+<p>As of May 2026, here is what MFFU allows and restricts:</p>
+
+<ul>
+  <li><strong>Automated trading:</strong> Allowed on evaluation and funded accounts</li>
+  <li><strong>VPS trading:</strong> Allowed</li>
+  <li><strong>API-based execution:</strong> Allowed via Tradovate and Rithmic</li>
+  <li><strong>Copy trading:</strong> Check current policy — rules vary</li>
+</ul>
+
+<h2>Rules That Matter for Bots</h2>
+
+<p>MFFU uses trailing drawdown on its $50K evaluation at $2,500. This is the same as Apex. The key rule algo traders need to understand is the <strong>30% consistency rule</strong>: no single trading day can account for more than 30% of your total profits at the time of payout.</p>
+
+<p>For bots with consistent daily performance, this rarely matters. But bots that occasionally generate outsized wins — say, a day where market conditions perfectly match the strategy and the bot makes 40% of its total profits in one session — need to account for this rule.</p>
+
+<p>Practically: if your bot has made $1,000 total profit and you want to request a payout, no single day can have generated more than $300 of that $1,000. If one day generated $450, you need to continue trading until total profits dilute that day below the 30% threshold.</p>
+
+<h2>How MFFU Compares to Apex for Algo Traders</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>MyFundedFutures</th>
+      <th>Apex Trader Funding</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Automation</td><td><span class="badge badge-allowed">Allowed</span></td><td><span class="badge badge-allowed">Allowed</span></td></tr>
+    <tr><td>$50K Eval</td><td>$165/mo</td><td>$167/mo</td></tr>
+    <tr><td>Drawdown</td><td>Trailing $2,500</td><td>Trailing $2,500</td></tr>
+    <tr><td>Consistency Rule</td><td>30%</td><td>None</td></tr>
+    <tr><td>Payout Split</td><td>90%</td><td>100%</td></tr>
+    <tr><td>Platforms</td><td>Tradovate, Rithmic</td><td>Tradovate, Rithmic, NinjaTrader</td></tr>
+  </tbody>
+</table>
+
+<p>MFFU and Apex are nearly identical on cost and drawdown. The main differences are the 30% consistency rule at MFFU and the 100% vs 90% payout split. For bots with consistent daily performance, MFFU is a solid choice. For bots with more variable daily performance, Apex's lack of a consistency rule is an advantage.</p>
+
+<h2>Why Most Sites Still List MFFU as Banning Automation</h2>
+
+<p>Prop firm comparison sites typically build their data once and update it infrequently. The July 2025 policy change at MFFU happened after many sites last reviewed their data. Since the change was made in firm documentation rather than announced as a major marketing push, it flew under the radar.</p>
+
+<p>This is exactly the kind of information gap that algopropfirms.com is built to address — rules are verified directly from firm policies and updated when changes are detected.</p>
+
+<div class="cta">
+  <p>See live-verified automation rules for all five algo-friendly firms.</p>
+  <a href="/">View Full Comparison Table →</a>
+</div>
+
+<div class="disclaimer">
+  <strong>Important:</strong> Rules verified May 2026. Always verify current automation policy directly with MyFundedFutures before purchasing an evaluation.
+</div>
+
+</BlogPost>
