@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AlgoPropFirms — Futures prop firms that allow algorithmic trading</title>
+<meta name="description" content="Independent comparison of futures prop firms with documented automation policies. Eval costs, drawdowns, splits, and what's actually allowed — verified directly from firm rules.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --canvas:#0f1117;--surface-1:#1a1d2e;--surface-2:#1e293b;--surface-3:#2d3148;--surface-4:#334155;
+    --hairline:#1e293b;--hairline-strong:#2d3148;
+    --ink:#f8fafc;--ink-2:#f1f5f9;--ink-3:#e2e8f0;--ink-4:#cbd5e1;--ink-muted:#94a3b8;--ink-subtle:#64748b;
+    --indigo:#6366f1;--indigo-hover:#4f46e5;
+    --good-text:#4ade80;--good-bg:#14532d;--warn-text:#fb923c;--warn-bg:#451a03;--bad-text:#f87171;--bad-bg:#450a0a;
+    --font-sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --ease-fast:.15s ease;
+  }
+  html,body{background:var(--canvas);color:var(--ink-3);font-family:var(--font-sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  body{font-feature-settings:"ss01","cv11"}
+  button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer}
+  a{color:var(--indigo);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  .app{min-height:100vh;display:flex;flex-direction:column}
+
+  /* NAV */
+  .nav{position:sticky;top:0;z-index:30;background:rgba(15,17,23,.85);backdrop-filter:saturate(160%) blur(8px);-webkit-backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--hairline)}
+  .nav-inner{max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:28px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:700;font-size:14px;letter-spacing:-.005em}
+  .brand-mark{width:22px;height:22px;border-radius:5px;background:var(--indigo);display:grid;place-items:center;color:#fff;font-family:var(--font-mono);font-size:11px;font-weight:700}
+  .brand .muted{color:var(--ink-subtle);font-weight:500}
+  .nav-links{display:flex;gap:4px;margin-left:12px}
+  .nav-link{padding:6px 12px;border-radius:6px;color:var(--ink-muted);font-size:13px;font-weight:500;transition:color var(--ease-fast),background var(--ease-fast)}
+  .nav-link:hover{color:var(--ink);background:var(--surface-1);text-decoration:none}
+  .nav-link.on{color:var(--ink);background:var(--surface-1)}
+  .nav-spacer{flex:1}
+  .nav-meta{font-family:var(--font-mono);font-size:11px;color:var(--ink-subtle);display:flex;align-items:center;gap:8px;padding:5px 10px;border:1px solid var(--hairline-strong);border-radius:999px}
+  .live-dot{width:6px;height:6px;border-radius:999px;background:var(--good-text);box-shadow:0 0 0 3px rgba(74,222,128,.15)}
+  .btn-pill{background:var(--indigo);color:#fff;padding:7px 14px;border-radius:6px;font-size:13px;font-weight:600;transition:background var(--ease-fast)}
+  .btn-pill:hover{background:var(--indigo-hover)}
+  .btn-ghost{background:transparent;color:var(--ink-2);border:1px solid var(--hairline-strong);padding:7px 14px;border-radius:6px;font-size:13px;font-weight:500;transition:background var(--ease-fast),border-color var(--ease-fast)}
+  .btn-ghost:hover{background:var(--surface-1);border-color:var(--surface-4)}
+
+  /* HERO */
+  .hero{border-bottom:1px solid var(--hairline);padding:80px 24px 64px}
+  .hero-inner{max-width:1200px;margin:0 auto}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--ink-subtle);text-transform:uppercase;letter-spacing:.08em;padding:5px 10px;border:1px solid var(--hairline-strong);border-radius:999px;margin-bottom:28px}
+  .eyebrow .ind{width:6px;height:6px;border-radius:999px;background:var(--indigo)}
+  .hero h1{font-size:clamp(40px,5.6vw,64px);font-weight:700;letter-spacing:-.025em;line-height:1.05;color:var(--ink);max-width:920px;margin-bottom:20px}
+  .hero h1 .accent{color:var(--ink-muted);font-weight:600}
+  .hero-sub{max-width:640px;color:var(--ink-muted);font-size:17px;line-height:1.55;margin-bottom:40px}
+  .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);margin-top:16px}
+  .stat{padding:24px 24px 24px 0;border-right:1px solid var(--hairline)}
+  .stat:first-child{padding-left:0}
+  .stat:not(:first-child){padding-left:24px}
+  .stat:last-child{border-right:0}
+  .stat-num{font-size:38px;font-weight:700;color:var(--ink);letter-spacing:-.025em;line-height:1;font-feature-settings:"tnum"}
+  .stat-num .unit{color:var(--ink-subtle);font-weight:500;margin-left:2px}
+  .stat-label{font-family:var(--font-mono);font-size:11px;color:var(--ink-subtle);text-transform:uppercase;letter-spacing:.08em;margin-top:10px}
+
+  /* FILTER BAR */
+  .filter-wrap{max-width:1200px;margin:0 auto;padding:28px 24px 0}
+  .filter-bar{display:grid;grid-template-columns:1.4fr repeat(4,1fr) auto;background:var(--surface-1);border:1px solid var(--hairline);border-radius:10px;overflow:hidden}
+  .filter-cell{padding:12px 16px;border-right:1px solid var(--hairline);display:flex;flex-direction:column;gap:4px;min-width:0}
+  .filter-cell:last-child{border-right:0}
+  .filter-label{font-family:var(--font-mono);font-size:10px;color:var(--ink-subtle);text-transform:uppercase;letter-spacing:.08em}
+  .filter-input,.filter-select{background:transparent;border:0;outline:0;color:var(--ink);font-size:14px;font-weight:500;width:100%;font-family:inherit;cursor:pointer;padding:0}
+  .filter-input::placeholder{color:var(--ink-subtle)}
+  .filter-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='none' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='M2 4l3 3 3-3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right center;padding-right:16px}
+  .filter-cell.actions{display:flex;flex-direction:row;align-items:center;gap:8px;padding:8px 12px}
+  .results-bar{max-width:1200px;margin:16px auto 0;padding:0 24px;display:flex;justify-content:space-between;align-items:center}
+  .results-count{font-family:var(--font-mono);font-size:12px;color:var(--ink-subtle)}
+  .results-count strong{color:var(--ink);font-weight:600}
+  .sort-group{display:flex;align-items:center;gap:8px}
+  .sort-select{background:var(--surface-1);border:1px solid var(--hairline);color:var(--ink-2);font-size:12px;padding:5px 22px 5px 10px;border-radius:6px;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='none' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='M2 4l3 3 3-3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+
+  /* CARDS */
+  .grid-wrap{max-width:1200px;margin:0 auto;padding:24px 24px 64px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media (max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}.filter-bar{grid-template-columns:1fr 1fr}}
+  @media (max-width:640px){.grid{grid-template-columns:1fr}.filter-bar{grid-template-columns:1fr}.hero-stats{grid-template-columns:repeat(2,1fr)}}
+  .card{position:relative;background:var(--surface-1);border:1px solid var(--hairline);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:16px;transition:border-color var(--ease-fast)}
+  .card:hover{border-color:var(--surface-4)}
+  .card.compare-on{border-color:var(--indigo)}
+  .card.hidden{display:none}
+  .card-head{display:flex;align-items:flex-start;gap:12px}
+  .logo{width:44px;height:44px;flex-shrink:0;background:var(--surface-2);border:1px solid var(--hairline-strong);border-radius:8px;display:grid;place-items:center;color:var(--ink);font-family:var(--font-mono);font-size:14px;font-weight:600;letter-spacing:-.01em}
+  .card-title-block{flex:1;min-width:0}
+  .card-title{font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.005em}
+  .card-meta{font-family:var(--font-mono);font-size:11px;color:var(--ink-subtle);margin-top:2px}
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+  .badge .dot{width:6px;height:6px;border-radius:999px}
+  .badge-allowed{background:var(--good-bg);color:var(--good-text)} .badge-allowed .dot{background:var(--good-text)}
+  .badge-verify{background:var(--warn-bg);color:var(--warn-text)} .badge-verify .dot{background:var(--warn-text)}
+  .badge-banned{background:var(--bad-bg);color:var(--bad-text)} .badge-banned .dot{background:var(--bad-text)}
+  .kv-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--hairline);border-radius:8px;overflow:hidden}
+  .kv{padding:10px 12px;border-right:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+  .kv:nth-child(2n){border-right:0}
+  .kv:nth-last-child(-n+2){border-bottom:0}
+  .kv-label{font-family:var(--font-mono);font-size:10px;color:var(--ink-subtle);text-transform:uppercase;letter-spacing:.06em}
+  .kv-value{font-size:14px;font-weight:600;color:var(--ink);margin-top:3px;font-feature-settings:"tnum"}
+  .kv-value .sub{color:var(--ink-subtle);font-weight:500;font-size:12px;margin-left:2px}
+  .kv-value.good{color:var(--good-text)}
+  .size-row,.platform-row{display:flex;flex-wrap:wrap;gap:4px}
+  .size-chip{font-family:var(--font-mono);font-size:11px;color:var(--ink-muted);background:var(--surface-2);padding:3px 7px;border-radius:4px}
+  .platform-tag{font-size:11px;color:var(--ink-muted);background:var(--surface-2);padding:3px 8px;border-radius:4px}
+  .card-foot{display:flex;gap:8px;align-items:center;margin-top:auto}
+  .btn-detail{flex:1;background:transparent;color:var(--ink);border:1px solid var(--hairline-strong);padding:9px 12px;border-radius:7px;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;transition:background var(--ease-fast),border-color var(--ease-fast)}
+  .btn-detail:hover{background:var(--surface-2);border-color:var(--surface-4)}
+  .btn-compare{width:36px;height:36px;background:transparent;border:1px solid var(--hairline-strong);border-radius:7px;color:var(--ink-subtle);display:grid;place-items:center;transition:background var(--ease-fast),color var(--ease-fast),border-color var(--ease-fast)}
+  .btn-compare:hover{background:var(--surface-2);color:var(--ink)}
+  .btn-compare.on{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+  .btn-compare .ico-check{display:none}
+  .btn-compare.on .ico-add{display:none}
+  .btn-compare.on .ico-check{display:block}
+
+  /* EMPTY */
+  .empty{grid-column:1/-1;padding:60px 24px;text-align:center;color:var(--ink-muted);border:1px dashed var(--hairline-strong);border-radius:10px}
+  .empty h3{font-size:18px;color:var(--ink);margin-bottom:8px;font-weight:600}
+
+  /* TRAY */
+  .tray{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:40;background:var(--surface-1);border:1px solid var(--surface-4);border-radius:12px;padding:10px 10px 10px 16px;display:flex;align-items:center;gap:16px;box-shadow:0 16px 40px rgba(0,0,0,.4),0 1px 0 rgba(255,255,255,.04) inset}
+  .tray.hidden{display:none}
+  .tray-label{font-family:var(--font-mono);font-size:11px;color:var(--ink-subtle);text-transform:uppercase;letter-spacing:.08em}
+  .tray-slots{display:flex;gap:6px}
+  .tray-slot{width:30px;height:30px;border-radius:6px;background:var(--surface-2);border:1px dashed var(--surface-4);display:grid;place-items:center;font-family:var(--font-mono);font-size:10px;color:var(--ink-subtle);font-weight:600}
+  .tray-slot.filled{border-style:solid;border-color:var(--indigo);background:var(--surface-2);color:var(--ink)}
+  .tray-go{background:var(--indigo);color:#fff;padding:8px 14px;border-radius:7px;font-size:13px;font-weight:600}
+  .tray-go:disabled{opacity:.4;cursor:not-allowed}
+  .tray-clear{background:transparent;color:var(--ink-subtle);font-size:12px}
+  .tray-clear:hover{color:var(--ink)}
+
+  /* DISCLAIMER + FOOTER */
+  .disclaimer{max-width:1200px;margin:0 auto 64px;padding:0 24px}
+  .disclaimer-inner{background:var(--surface-1);border-radius:8px;border-left:3px solid var(--indigo);padding:16px 20px;color:var(--ink-subtle);font-size:13px;line-height:1.6}
+  .disclaimer-inner strong{color:var(--ink-muted)}
+  .foot{border-top:1px solid var(--hairline);padding:32px 24px;font-family:var(--font-mono);font-size:11px;color:var(--ink-subtle);display:flex;justify-content:space-between;max-width:1200px;margin:0 auto;width:100%}
+
+  /* MODAL */
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;justify-content:center;align-items:flex-start;padding:64px 24px 24px;z-index:50;overflow-y:auto}
+  .scrim.show{display:flex;animation:fade-in .18s ease-out}
+  @keyframes fade-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .modal{width:100%;max-width:720px;background:var(--canvas);border:1px solid var(--surface-3);border-radius:12px;padding:32px;position:relative}
+  .modal-close{position:absolute;top:16px;right:20px;color:var(--ink-subtle);font-size:14px;font-family:var(--font-mono);padding:4px 8px;border-radius:4px}
+  .modal-close:hover{background:var(--surface-1);color:var(--ink)}
+  .modal-head{display:flex;gap:16px;align-items:flex-start;margin-bottom:20px}
+  .modal-head .logo{width:56px;height:56px;font-size:18px}
+  .modal-title{font-size:24px;font-weight:700;color:var(--ink);letter-spacing:-.015em}
+  .modal-section-title{font-family:var(--font-mono);font-size:11px;color:var(--ink-subtle);text-transform:uppercase;letter-spacing:.08em;margin:24px 0 10px}
+  .modal-stats{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface-1);border:1px solid var(--hairline);border-radius:8px;overflow:hidden}
+  .proscons{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .proscons ul{list-style:none}
+  .proscons li{font-size:13px;color:var(--ink-3);padding:6px 0;display:flex;gap:8px;align-items:flex-start}
+  .proscons .pros li::before{content:"+";color:var(--good-text);font-family:var(--font-mono);font-weight:700;flex-shrink:0}
+  .proscons .cons li::before{content:"--";color:var(--bad-text);font-family:var(--font-mono);font-weight:700;flex-shrink:0}
+  .modal-foot{margin-top:24px;display:flex;gap:10px;align-items:center}
+
+  /* COMPARE PAGE */
+  .compare-page{max-width:1200px;margin:0 auto;padding:56px 24px 96px;display:none}
+  .compare-page.show{display:block}
+  .home-section.hidden{display:none}
+  .compare-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;gap:16px;flex-wrap:wrap}
+  .compare-head h1{font-size:40px;font-weight:700;letter-spacing:-.025em;color:var(--ink)}
+  .compare-head p{color:var(--ink-muted);font-size:15px;max-width:540px;margin-top:8px}
+  .cmp-grid{display:grid;border:1px solid var(--hairline);border-radius:12px;overflow:hidden;background:var(--canvas)}
+  .cmp-cell{padding:16px 18px;border-bottom:1px dashed var(--hairline);border-right:1px solid var(--hairline);min-width:0}
+  .cmp-cell.row-label{font-size:13px;color:var(--ink-muted);font-weight:500}
+  .cmp-cell.row-label .row-sub{font-family:var(--font-mono);font-size:10px;color:var(--ink-subtle);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+  .cmp-cell.value{font-size:14px;color:var(--ink);font-weight:600;text-align:center;font-feature-settings:"tnum"}
+  .cmp-cell.value .sub{display:block;color:var(--ink-subtle);font-weight:500;font-size:11px;margin-top:2px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em}
+  .cmp-cell.last-in-row{border-right:0}
+  .cmp-firm-head{background:var(--surface-1);padding:24px 18px 22px;border-bottom:1px solid var(--hairline);border-right:1px solid var(--hairline);text-align:center;position:relative}
+  .cmp-firm-head.featured{background:var(--surface-2)}
+  .cmp-firm-head .logo{margin:0 auto 12px}
+  .cmp-firm-head .name{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-.005em}
+  .cmp-firm-head .sub{font-size:12px;color:var(--ink-subtle);margin-top:4px;line-height:1.4}
+  .cmp-pop{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--indigo);color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border-radius:999px}
+  .cmp-corner{background:transparent;border-bottom:1px solid var(--hairline);border-right:1px solid var(--hairline);padding:24px 18px}
+  .cmp-corner h3{font-size:14px;font-weight:600;color:var(--ink-muted);margin-top:6px}
+  .cmp-foot{padding:20px 18px 24px;border-right:1px solid var(--hairline);text-align:center;background:var(--surface-1)}
+  .cmp-foot.featured{background:var(--surface-2)}
+  .cmp-foot .price-cap{font-family:var(--font-mono);font-size:10px;color:var(--ink-subtle);text-transform:uppercase;letter-spacing:.08em}
+  .cmp-foot .price{font-size:28px;font-weight:700;color:var(--ink);margin:4px 0 14px;letter-spacing:-.02em}
+  .cmp-foot .price .small{font-size:13px;color:var(--ink-subtle);font-weight:500}
+  .cmp-cta{display:inline-block;width:100%;background:transparent;color:var(--ink);border:1px solid var(--hairline-strong);padding:10px 16px;border-radius:7px;font-size:13px;font-weight:600;transition:background var(--ease-fast)}
+  .cmp-cta:hover{background:var(--surface-2);text-decoration:none}
+  .cmp-cta.primary{background:var(--indigo);border-color:var(--indigo);color:#fff}
+  .cmp-cta.primary:hover{background:var(--indigo-hover)}
+  .yn{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+  .yn.yes{color:var(--good-text)} .yn.no{color:var(--bad-text)} .yn.maybe{color:var(--warn-text)}
+  .yn svg{width:16px;height:16px}
+  .swap{margin-top:12px;display:flex;align-items:center;gap:6px;background:var(--canvas);border:1px solid var(--hairline-strong);border-radius:6px;padding:4px 8px 4px 4px}
+  .swap select{flex:1;appearance:none;background:transparent;border:0;outline:0;color:var(--ink);font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;padding:4px}
+  .swap-x{color:var(--ink-subtle);font-family:var(--font-mono);font-size:11px;padding:0 4px}
+  .swap-x:hover{color:var(--bad-text)}
+  .cmp-empty{border:1px dashed var(--hairline-strong);border-radius:12px;padding:80px 24px;text-align:center;color:var(--ink-muted)}
+  .cmp-empty h2{color:var(--ink);margin-bottom:12px;font-size:24px;font-weight:600}
+  .cmp-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:720px;margin:24px auto 0}
+  .cmp-picker .filter-cell{background:var(--surface-1);border:1px solid var(--hairline);border-radius:8px}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="brand" data-action="nav-home"><div class="brand-mark">A</div><span>AlgoPropFirms<span class="muted">.com</span></span></a>
+      <div class="nav-links">
+        <button id="nav-tracker" class="nav-link on" data-action="nav-home">Tracker</button>
+        <button id="nav-compare" class="nav-link" data-action="nav-compare">Compare <span id="nav-compare-count" style="color:var(--indigo);font-family:var(--font-mono);font-size:11px;margin-left:4px;display:none;"></span></button>
+        <a class="nav-link" href="/blog">Blog</a>
+      </div>
+      <div class="nav-spacer"></div>
+      <div class="nav-meta"><span class="live-dot"></span>Verified May 2026</div>
+      <button class="btn-pill">Subscribe to alerts</button>
+    </div>
+  </nav>
+
+  <section id="home-section" class="home-section">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="eyebrow"><span class="ind"></span>Independent tracker · Verified May 2026</div>
+        <h1>Find a futures prop firm <span class="accent">that allows your bot.</span></h1>
+        <p class="hero-sub">A research-desk comparison of every futures prop firm with a documented automation policy. Rules verified directly from firm policies -- not affiliate copy.</p>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-num">8<span class="unit">firms</span></div><div class="stat-label">Tracked</div></div>
+          <div class="stat"><div class="stat-num">5<span class="unit">/8</span></div><div class="stat-label">Allow automation</div></div>
+          <div class="stat"><div class="stat-num">$145<span class="unit">/mo</span></div><div class="stat-label">Cheapest 50K eval</div></div>
+          <div class="stat"><div class="stat-num">100<span class="unit">%</span></div><div class="stat-label">Highest payout split</div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="filter-wrap">
+      <div class="filter-bar">
+        <div class="filter-cell">
+          <span class="filter-label">Search</span>
+          <input id="filter-q" class="filter-input" placeholder="Firm name..." type="search">
+        </div>
+        <div class="filter-cell">
+          <span class="filter-label">Account size</span>
+          <select id="filter-size" class="filter-select">
+            <option value="">Any size</option>
+            <option value="25000">$25K</option>
+            <option value="50000">$50K</option>
+            <option value="100000">$100K</option>
+            <option value="150000">$150K</option>
+            <option value="250000">$250K</option>
+          </select>
+        </div>
+        <div class="filter-cell">
+          <span class="filter-label">Drawdown</span>
+          <select id="filter-drawdown" class="filter-select">
+            <option value="">Any</option>
+            <option value="trailing">Trailing</option>
+            <option value="end_of_day">End-of-day</option>
+          </select>
+        </div>
+        <div class="filter-cell">
+          <span class="filter-label">Platform</span>
+          <select id="filter-platform" class="filter-select">
+            <option value="">All platforms</option>
+            <option value="Tradovate">Tradovate</option>
+            <option value="Rithmic">Rithmic</option>
+            <option value="NinjaTrader">NinjaTrader</option>
+            <option value="Finamark">Finamark</option>
+          </select>
+        </div>
+        <div class="filter-cell">
+          <span class="filter-label">Automation</span>
+          <select id="filter-automation" class="filter-select">
+            <option value="">All policies</option>
+            <option value="allowed">Allowed</option>
+            <option value="verify">Verify</option>
+            <option value="banned">Banned</option>
+          </select>
+        </div>
+        <div class="filter-cell actions">
+          <button id="filter-reset" class="btn-ghost">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-bar">
+      <div id="results-count" class="results-count"><strong>8</strong> firms matching</div>
+      <div class="sort-group">
+        <span class="filter-label">Sort by</span>
+        <select id="filter-sort" class="sort-select">
+          <option value="cheapest_50k">Cheapest 50K eval</option>
+          <option value="cheapest_100k">Cheapest 100K eval</option>
+          <option value="highest_split">Highest payout split</option>
+          <option value="name">Firm name (A to Z)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid-wrap">
+      <div id="grid" class="grid">
+      <article class="card" data-slug="apex" data-name="apex trader funding" data-sizes="25000,50000,75000,100000,150000,250000,300000" data-drawdown="trailing" data-platforms="Tradovate,Rithmic,NinjaTrader" data-automation="allowed" data-eval50="167" data-eval100="207" data-split="100">
+        <div class="card-head"><div class="logo">AP</div><div class="card-title-block"><div class="card-title">Apex Trader Funding</div><div class="card-meta">Checked 2026-05-01</div></div><span class="badge badge-allowed"><span class="dot"></span>Allowed</span></div>
+        <div class="kv-grid"><div class="kv"><div class="kv-label">$50K eval</div><div class="kv-value">$167<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">$100K eval</div><div class="kv-value">$207<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">Drawdown</div><div class="kv-value">Trailing<span class="sub"> $2,500</span></div></div><div class="kv"><div class="kv-label">Payout split</div><div class="kv-value good">100%</div></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Sizes available</div><div class="size-row"><span class="size-chip">$25K</span><span class="size-chip">$50K</span><span class="size-chip">$75K</span><span class="size-chip">$100K</span><span class="size-chip">$150K</span><span class="size-chip">$250K</span><span class="size-chip">$300K</span></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Platforms</div><div class="platform-row"><span class="platform-tag">Tradovate</span><span class="platform-tag">Rithmic</span><span class="platform-tag">NinjaTrader</span></div></div>
+        <div class="card-foot"><button class="btn-detail" data-action="detail" data-slug="apex">View details <span style="color:var(--ink-subtle);">-&gt;</span></button><button class="btn-compare" data-action="compare" data-slug="apex" title="Add to compare"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-add"><path d="M8 3v10M3 8h10"/></svg><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-check"><path d="M3 8l3.5 3.5L13 5"/></svg></button></div>
+      </article>
+      <article class="card" data-slug="myfundedfutures" data-name="myfundedfutures" data-sizes="50000,100000,150000" data-drawdown="trailing" data-platforms="Tradovate,Rithmic" data-automation="allowed" data-eval50="165" data-eval100="250" data-split="90">
+        <div class="card-head"><div class="logo">MF</div><div class="card-title-block"><div class="card-title">MyFundedFutures</div><div class="card-meta">Checked 2026-05-01</div></div><span class="badge badge-allowed"><span class="dot"></span>Allowed</span></div>
+        <div class="kv-grid"><div class="kv"><div class="kv-label">$50K eval</div><div class="kv-value">$165<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">$100K eval</div><div class="kv-value">$250<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">Drawdown</div><div class="kv-value">Trailing<span class="sub"> $2,500</span></div></div><div class="kv"><div class="kv-label">Payout split</div><div class="kv-value good">90%</div></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Sizes available</div><div class="size-row"><span class="size-chip">$50K</span><span class="size-chip">$100K</span><span class="size-chip">$150K</span></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Platforms</div><div class="platform-row"><span class="platform-tag">Tradovate</span><span class="platform-tag">Rithmic</span></div></div>
+        <div class="card-foot"><button class="btn-detail" data-action="detail" data-slug="myfundedfutures">View details <span style="color:var(--ink-subtle);">-&gt;</span></button><button class="btn-compare" data-action="compare" data-slug="myfundedfutures" title="Add to compare"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-add"><path d="M8 3v10M3 8h10"/></svg><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-check"><path d="M3 8l3.5 3.5L13 5"/></svg></button></div>
+      </article>
+      <article class="card" data-slug="topstep" data-name="topstep" data-sizes="50000,100000,150000" data-drawdown="trailing" data-platforms="Tradovate,NinjaTrader" data-automation="allowed" data-eval50="149" data-eval100="199" data-split="100">
+        <div class="card-head"><div class="logo">TS</div><div class="card-title-block"><div class="card-title">Topstep</div><div class="card-meta">Checked 2026-05-01</div></div><span class="badge badge-allowed"><span class="dot"></span>Allowed</span></div>
+        <div class="kv-grid"><div class="kv"><div class="kv-label">$50K eval</div><div class="kv-value">$149<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">$100K eval</div><div class="kv-value">$199<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">Drawdown</div><div class="kv-value">Trailing<span class="sub"> $2,000</span></div></div><div class="kv"><div class="kv-label">Payout split</div><div class="kv-value good">100%</div></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Sizes available</div><div class="size-row"><span class="size-chip">$50K</span><span class="size-chip">$100K</span><span class="size-chip">$150K</span></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Platforms</div><div class="platform-row"><span class="platform-tag">Tradovate</span><span class="platform-tag">NinjaTrader</span></div></div>
+        <div class="card-foot"><button class="btn-detail" data-action="detail" data-slug="topstep">View details <span style="color:var(--ink-subtle);">-&gt;</span></button><button class="btn-compare" data-action="compare" data-slug="topstep" title="Add to compare"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-add"><path d="M8 3v10M3 8h10"/></svg><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-check"><path d="M3 8l3.5 3.5L13 5"/></svg></button></div>
+      </article>
+      <article class="card" data-slug="takeprofittrader" data-name="take profit trader" data-sizes="25000,50000,75000,100000,150000" data-drawdown="end_of_day" data-platforms="Tradovate,Rithmic" data-automation="allowed" data-eval50="150" data-eval100="200" data-split="90">
+        <div class="card-head"><div class="logo">TP</div><div class="card-title-block"><div class="card-title">Take Profit Trader</div><div class="card-meta">Checked 2026-05-01</div></div><span class="badge badge-allowed"><span class="dot"></span>Allowed</span></div>
+        <div class="kv-grid"><div class="kv"><div class="kv-label">$50K eval</div><div class="kv-value">$150<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">$100K eval</div><div class="kv-value">$200<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">Drawdown</div><div class="kv-value">End-of-day<span class="sub"> $2,500</span></div></div><div class="kv"><div class="kv-label">Payout split</div><div class="kv-value good">90%</div></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Sizes available</div><div class="size-row"><span class="size-chip">$25K</span><span class="size-chip">$50K</span><span class="size-chip">$75K</span><span class="size-chip">$100K</span><span class="size-chip">$150K</span></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Platforms</div><div class="platform-row"><span class="platform-tag">Tradovate</span><span class="platform-tag">Rithmic</span></div></div>
+        <div class="card-foot"><button class="btn-detail" data-action="detail" data-slug="takeprofittrader">View details <span style="color:var(--ink-subtle);">-&gt;</span></button><button class="btn-compare" data-action="compare" data-slug="takeprofittrader" title="Add to compare"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-add"><path d="M8 3v10M3 8h10"/></svg><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-check"><path d="M3 8l3.5 3.5L13 5"/></svg></button></div>
+      </article>
+      <article class="card" data-slug="tradeday" data-name="tradeday" data-sizes="25000,50000,100000,150000" data-drawdown="trailing" data-platforms="Tradovate,Rithmic" data-automation="allowed" data-eval50="150" data-eval100="200" data-split="90">
+        <div class="card-head"><div class="logo">TD</div><div class="card-title-block"><div class="card-title">TradeDay</div><div class="card-meta">Checked 2026-05-01</div></div><span class="badge badge-allowed"><span class="dot"></span>Allowed</span></div>
+        <div class="kv-grid"><div class="kv"><div class="kv-label">$50K eval</div><div class="kv-value">$150<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">$100K eval</div><div class="kv-value">$200<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">Drawdown</div><div class="kv-value">Trailing<span class="sub"> $2,500</span></div></div><div class="kv"><div class="kv-label">Payout split</div><div class="kv-value good">90%</div></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Sizes available</div><div class="size-row"><span class="size-chip">$25K</span><span class="size-chip">$50K</span><span class="size-chip">$100K</span><span class="size-chip">$150K</span></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Platforms</div><div class="platform-row"><span class="platform-tag">Tradovate</span><span class="platform-tag">Rithmic</span></div></div>
+        <div class="card-foot"><button class="btn-detail" data-action="detail" data-slug="tradeday">View details <span style="color:var(--ink-subtle);">-&gt;</span></button><button class="btn-compare" data-action="compare" data-slug="tradeday" title="Add to compare"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-add"><path d="M8 3v10M3 8h10"/></svg><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-check"><path d="M3 8l3.5 3.5L13 5"/></svg></button></div>
+      </article>
+      <article class="card" data-slug="tradeify" data-name="tradeify" data-sizes="25000,50000,100000" data-drawdown="trailing" data-platforms="Tradovate" data-automation="verify" data-eval50="149" data-eval100="199" data-split="90">
+        <div class="card-head"><div class="logo">TY</div><div class="card-title-block"><div class="card-title">Tradeify</div><div class="card-meta">Checked 2026-05-01</div></div><span class="badge badge-verify"><span class="dot"></span>Verify</span></div>
+        <div class="kv-grid"><div class="kv"><div class="kv-label">$50K eval</div><div class="kv-value">$149<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">$100K eval</div><div class="kv-value">$199<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">Drawdown</div><div class="kv-value">Trailing<span class="sub"> $2,500</span></div></div><div class="kv"><div class="kv-label">Payout split</div><div class="kv-value good">90%</div></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Sizes available</div><div class="size-row"><span class="size-chip">$25K</span><span class="size-chip">$50K</span><span class="size-chip">$100K</span></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Platforms</div><div class="platform-row"><span class="platform-tag">Tradovate</span></div></div>
+        <div class="card-foot"><button class="btn-detail" data-action="detail" data-slug="tradeify">View details <span style="color:var(--ink-subtle);">-&gt;</span></button><button class="btn-compare" data-action="compare" data-slug="tradeify" title="Add to compare"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-add"><path d="M8 3v10M3 8h10"/></svg><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-check"><path d="M3 8l3.5 3.5L13 5"/></svg></button></div>
+      </article>
+      <article class="card" data-slug="earn2trade" data-name="earn2trade gauntlet" data-sizes="25000,50000,100000,200000" data-drawdown="end_of_day" data-platforms="NinjaTrader,Finamark" data-automation="banned" data-eval50="167" data-eval100="217" data-split="80">
+        <div class="card-head"><div class="logo">E2</div><div class="card-title-block"><div class="card-title">Earn2Trade Gauntlet</div><div class="card-meta">Checked 2026-05-01</div></div><span class="badge badge-banned"><span class="dot"></span>Banned</span></div>
+        <div class="kv-grid"><div class="kv"><div class="kv-label">$50K eval</div><div class="kv-value">$167<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">$100K eval</div><div class="kv-value">$217<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">Drawdown</div><div class="kv-value">End-of-day<span class="sub"> $2,000</span></div></div><div class="kv"><div class="kv-label">Payout split</div><div class="kv-value good">80%</div></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Sizes available</div><div class="size-row"><span class="size-chip">$25K</span><span class="size-chip">$50K</span><span class="size-chip">$100K</span><span class="size-chip">$200K</span></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Platforms</div><div class="platform-row"><span class="platform-tag">NinjaTrader</span><span class="platform-tag">Finamark</span></div></div>
+        <div class="card-foot"><button class="btn-detail" data-action="detail" data-slug="earn2trade">View details <span style="color:var(--ink-subtle);">-&gt;</span></button><button class="btn-compare" data-action="compare" data-slug="earn2trade" title="Add to compare"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-add"><path d="M8 3v10M3 8h10"/></svg><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-check"><path d="M3 8l3.5 3.5L13 5"/></svg></button></div>
+      </article>
+      <article class="card" data-slug="bulenox" data-name="bulenox" data-sizes="25000,50000,100000,150000,250000" data-drawdown="trailing" data-platforms="Tradovate,Rithmic" data-automation="verify" data-eval50="145" data-eval100="215" data-split="90">
+        <div class="card-head"><div class="logo">BX</div><div class="card-title-block"><div class="card-title">Bulenox</div><div class="card-meta">Checked 2026-04-28</div></div><span class="badge badge-verify"><span class="dot"></span>Verify</span></div>
+        <div class="kv-grid"><div class="kv"><div class="kv-label">$50K eval</div><div class="kv-value">$145<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">$100K eval</div><div class="kv-value">$215<span class="sub">/mo</span></div></div><div class="kv"><div class="kv-label">Drawdown</div><div class="kv-value">Trailing<span class="sub"> $2,500</span></div></div><div class="kv"><div class="kv-label">Payout split</div><div class="kv-value good">90%</div></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Sizes available</div><div class="size-row"><span class="size-chip">$25K</span><span class="size-chip">$50K</span><span class="size-chip">$100K</span><span class="size-chip">$150K</span><span class="size-chip">$250K</span></div></div>
+        <div><div class="kv-label" style="margin-bottom:6px;">Platforms</div><div class="platform-row"><span class="platform-tag">Tradovate</span><span class="platform-tag">Rithmic</span></div></div>
+        <div class="card-foot"><button class="btn-detail" data-action="detail" data-slug="bulenox">View details <span style="color:var(--ink-subtle);">-&gt;</span></button><button class="btn-compare" data-action="compare" data-slug="bulenox" title="Add to compare"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-add"><path d="M8 3v10M3 8h10"/></svg><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ico-check"><path d="M3 8l3.5 3.5L13 5"/></svg></button></div>
+      </article>
+        <div id="empty-state" class="empty" style="display:none;"><h3>No firms match those filters</h3><p>Try widening your search or clearing the filter bar.</p></div>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <div class="disclaimer-inner">
+        <strong>Independent comparison.</strong> Prop firm rules change frequently and without notice. Always verify the current automation policy directly with the firm before purchasing an evaluation. This tracker is updated manually when rule changes are detected -- last verified May 2026. AlgoPropFirms is not affiliated with any firm listed.
+      </div>
+    </div>
+  </section>
+
+  <section id="compare-page" class="compare-page"></section>
+
+  <div style="margin-top:auto;">
+    <div class="foot">
+      <div>2026 AlgoPropFirms - Independent - No affiliate links</div>
+      <div>Built with public rule data - Last verified 2026-05-01</div>
+    </div>
+  </div>
+</div>
+
+<div id="tray" class="tray hidden">
+  <span class="tray-label">Compare</span>
+  <div class="tray-slots">
+    <div class="tray-slot">1</div>
+    <div class="tray-slot">2</div>
+    <div class="tray-slot">3</div>
+  </div>
+  <button id="tray-clear" class="tray-clear" data-action="tray-clear">Clear</button>
+  <button id="tray-go" class="tray-go" data-action="tray-go" disabled>Compare 0 -&gt;</button>
+</div>
+
+<div id="modal-scrim" class="scrim">
+  <div id="modal" class="modal" role="dialog" aria-modal="true"></div>
+</div>
+
+<script type="application/json" id="firms-data">[{"name":"Apex Trader Funding","slug":"apex","monogram":"AP","automation":"allowed","automation_notes":"Explicitly permits automated trading, DCA bots, semi-automated systems.","platforms":["Tradovate","Rithmic","NinjaTrader"],"account_sizes":[25000,50000,75000,100000,150000,250000,300000],"eval_cost_25k":147,"eval_cost_50k":167,"eval_cost_100k":207,"eval_cost_150k":297,"drawdown_type":"trailing","drawdown_amount_50k":2500,"drawdown_amount_100k":3000,"consistency_rule":"none","payout_split":100,"payout_frequency":"Twice monthly","news_trading":"allowed","profit_target_50k":3000,"min_trading_days":1,"funded_fee":130,"rules_url":"https://apextraderfunding.com/terms","rules_last_checked":"2026-05-01","notes":"March 2026 overhaul removed 30% consistency rule and recurring fees.","pros":["No consistency rule","100% first $25K, then 90/10","Same-day payouts on funded"],"cons":["Trailing drawdown locks at $100 buffer","Limit order fills only on touch"]},{"name":"MyFundedFutures","slug":"myfundedfutures","monogram":"MF","automation":"allowed","automation_notes":"Reversed automation ban July 2025. Most comparison sites not yet updated.","platforms":["Tradovate","Rithmic"],"account_sizes":[50000,100000,150000],"eval_cost_25k":null,"eval_cost_50k":165,"eval_cost_100k":250,"eval_cost_150k":360,"drawdown_type":"trailing","drawdown_amount_50k":2500,"drawdown_amount_100k":3000,"consistency_rule":"30%","payout_split":90,"payout_frequency":"On demand (8d min.)","news_trading":"allowed","profit_target_50k":3000,"min_trading_days":0,"funded_fee":0,"rules_url":"https://www.myfundedfutures.com/terms","rules_last_checked":"2026-05-01","notes":"Rule change not reflected on most competitor sites.","pros":["Zero funded-account fees","On-demand payouts","Algos officially allowed"],"cons":["30% consistency rule applies","No 25K size"]},{"name":"Topstep","slug":"topstep","monogram":"TS","automation":"allowed","automation_notes":"Allows automated trading. VPS banned on legacy accounts only.","platforms":["Tradovate","NinjaTrader"],"account_sizes":[50000,100000,150000],"eval_cost_25k":null,"eval_cost_50k":149,"eval_cost_100k":199,"eval_cost_150k":299,"drawdown_type":"trailing","drawdown_amount_50k":2000,"drawdown_amount_100k":3000,"consistency_rule":"none","payout_split":100,"payout_frequency":"Weekly","news_trading":"verify","profit_target_50k":3000,"min_trading_days":5,"funded_fee":149,"rules_url":"https://www.topstep.com/terms","rules_last_checked":"2026-05-01","notes":"Oldest funded-trader program. Solid reputation, weekly payouts.","pros":["Established 2012","Weekly cycle","100% split first $5K, then 90/10"],"cons":["5 min trading days before payout","Funded fee monthly"]},{"name":"Take Profit Trader","slug":"takeprofittrader","monogram":"TP","automation":"allowed","automation_notes":"Automation permitted on evaluation and funded accounts.","platforms":["Tradovate","Rithmic"],"account_sizes":[25000,50000,75000,100000,150000],"eval_cost_25k":130,"eval_cost_50k":150,"eval_cost_100k":200,"eval_cost_150k":300,"drawdown_type":"end_of_day","drawdown_amount_50k":2500,"drawdown_amount_100k":3000,"consistency_rule":"none","payout_split":90,"payout_frequency":"Bi-weekly","news_trading":"allowed","profit_target_50k":2000,"min_trading_days":7,"funded_fee":0,"rules_url":"https://takeprofittrader.com/terms","rules_last_checked":"2026-05-01","notes":"End-of-day drawdown is more forgiving intraday than trailing.","pros":["EOD drawdown -- easier intraday","Lower $2K profit target on 50K","No funded fee"],"cons":["7 min trading days","Bi-weekly cycle"]},{"name":"TradeDay","slug":"tradeday","monogram":"TD","automation":"allowed","automation_notes":"Automation allowed; verify current policy before purchasing.","platforms":["Tradovate","Rithmic"],"account_sizes":[25000,50000,100000,150000],"eval_cost_25k":99,"eval_cost_50k":150,"eval_cost_100k":200,"eval_cost_150k":300,"drawdown_type":"trailing","drawdown_amount_50k":2500,"drawdown_amount_100k":3000,"consistency_rule":"none","payout_split":90,"payout_frequency":"Weekly","news_trading":"allowed","profit_target_50k":3000,"min_trading_days":5,"funded_fee":0,"rules_url":"https://www.tradeday.com/terms","rules_last_checked":"2026-05-01","notes":"Australian-based. Quiet but well-reviewed in algo communities.","pros":["Cheapest 25K eval at $99","Weekly payouts","No funded fee"],"cons":["Trailing drawdown","Smaller scaling pool"]},{"name":"Tradeify","slug":"tradeify","monogram":"TY","automation":"verify","automation_notes":"Policy unclear -- verify directly before purchasing.","platforms":["Tradovate"],"account_sizes":[25000,50000,100000],"eval_cost_25k":99,"eval_cost_50k":149,"eval_cost_100k":199,"eval_cost_150k":null,"drawdown_type":"trailing","drawdown_amount_50k":2500,"drawdown_amount_100k":3000,"consistency_rule":"none","payout_split":90,"payout_frequency":"Bi-weekly","news_trading":"verify","profit_target_50k":2000,"min_trading_days":5,"funded_fee":0,"rules_url":"https://tradeify.co/terms","rules_last_checked":"2026-05-01","notes":"Newer firm. Public policy does not explicitly address bots.","pros":["Lower profit target ($2K on 50K)","Cheap entry"],"cons":["Automation policy ambiguous","Tradovate only"]},{"name":"Earn2Trade Gauntlet","slug":"earn2trade","monogram":"E2","automation":"banned","automation_notes":"Explicit ban on EAs, bots, copy-trading and any third-party automation.","platforms":["NinjaTrader","Finamark"],"account_sizes":[25000,50000,100000,200000],"eval_cost_25k":117,"eval_cost_50k":167,"eval_cost_100k":217,"eval_cost_150k":null,"drawdown_type":"end_of_day","drawdown_amount_50k":2000,"drawdown_amount_100k":3000,"consistency_rule":"none","payout_split":80,"payout_frequency":"Monthly","news_trading":"verify","profit_target_50k":3000,"min_trading_days":10,"funded_fee":138,"rules_url":"https://earn2trade.com/terms","rules_last_checked":"2026-05-01","notes":"Strict manual-only program. Listed for completeness, not recommended for algo traders.","pros":["Education included","EOD drawdown"],"cons":["No automation, period","10 min trading days","Monthly payouts only"]},{"name":"Bulenox","slug":"bulenox","monogram":"BX","automation":"verify","automation_notes":"Allows EAs in evaluation. Policy on funded accounts unclear in writing.","platforms":["Tradovate","Rithmic"],"account_sizes":[25000,50000,100000,150000,250000],"eval_cost_25k":115,"eval_cost_50k":145,"eval_cost_100k":215,"eval_cost_150k":295,"drawdown_type":"trailing","drawdown_amount_50k":2500,"drawdown_amount_100k":3000,"consistency_rule":"none","payout_split":90,"payout_frequency":"Bi-weekly","news_trading":"allowed","profit_target_50k":2500,"min_trading_days":5,"funded_fee":0,"rules_url":"https://bulenox.com/terms","rules_last_checked":"2026-04-28","notes":"Discount-driven. Coupons routinely 70%+ off list price.","pros":["Frequent discounts","Up to 250K accounts","No funded fee"],"cons":["Funded automation policy unclear","Trailing drawdown"]}]</script>
+<script>
+(function(){
+  'use strict';
+  var FIRMS = JSON.parse(document.getElementById('firms-data').textContent);
+  var BY_SLUG = {}; FIRMS.forEach(function(f){ BY_SLUG[f.slug] = f; });
+  var fmtUSD = function(n){ return n == null ? '--' : '$' + n.toLocaleString(); };
+  var fmtSize = function(n){ return '$' + (n/1000) + 'K'; };
+  var state = { filters: { q:'', size:'', drawdown:'', platform:'', automation:'', sort:'cheapest_50k' }, slots: [null, null, null], view: 'home' };
+  var grid = document.getElementById('grid');
+  var cards = Array.prototype.slice.call(grid.querySelectorAll('.card'));
+  var resultsCount = document.getElementById('results-count');
+  var emptyState = document.getElementById('empty-state');
+  var tray = document.getElementById('tray');
+  var traySlots = tray.querySelectorAll('.tray-slot');
+  var trayGo = document.getElementById('tray-go');
+  var navCount = document.getElementById('nav-compare-count');
+  var homeSection = document.getElementById('home-section');
+  var comparePage = document.getElementById('compare-page');
+  var modalScrim = document.getElementById('modal-scrim');
+  var modal = document.getElementById('modal');
+  function applyFilters(){
+    var f = state.filters; var visible = [];
+    cards.forEach(function(card){
+      var match = true;
+      if (f.q && card.dataset.name.indexOf(f.q.toLowerCase()) === -1) match = false;
+      if (f.size && (','+card.dataset.sizes+',').indexOf(','+f.size+',') === -1) match = false;
+      if (f.drawdown && card.dataset.drawdown !== f.drawdown) match = false;
+      if (f.platform && (','+card.dataset.platforms+',').indexOf(','+f.platform+',') === -1) match = false;
+      if (f.automation && card.dataset.automation !== f.automation) match = false;
+      if (match) visible.push(card);
+      card.classList.toggle('hidden', !match);
+    });
+    var sorters = { cheapest_50k: function(a,b){ return parseFloat(a.dataset.eval50)-parseFloat(b.dataset.eval50); }, cheapest_100k: function(a,b){ return parseFloat(a.dataset.eval100)-parseFloat(b.dataset.eval100); }, highest_split: function(a,b){ return parseFloat(b.dataset.split)-parseFloat(a.dataset.split); }, name: function(a,b){ return a.dataset.name.localeCompare(b.dataset.name); } };
+    visible.sort(sorters[f.sort] || sorters.cheapest_50k);
+    visible.forEach(function(c){ grid.appendChild(c); });
+    grid.appendChild(emptyState);
+    resultsCount.innerHTML = '<strong>' + visible.length + '</strong> ' + (visible.length === 1 ? 'firm' : 'firms') + ' matching';
+    emptyState.style.display = visible.length === 0 ? 'block' : 'none';
+  }
+  function bindFilters(){
+    var ids = ['q','size','drawdown','platform','automation','sort'];
+    ids.forEach(function(id){
+      var el = document.getElementById('filter-' + id);
+      var ev = el.tagName === 'INPUT' ? 'input' : 'change';
+      el.addEventListener(ev, function(){ state.filters[id] = el.value; applyFilters(); });
+    });
+    document.getElementById('filter-reset').addEventListener('click', function(){
+      state.filters = { q:'', size:'', drawdown:'', platform:'', automation:'', sort: state.filters.sort };
+      ids.forEach(function(id){ if (id !== 'sort') document.getElementById('filter-' + id).value = ''; });
+      applyFilters();
+    });
+  }
+  function toggleCompare(slug){
+    var firm = BY_SLUG[slug];
+    var idx = state.slots.findIndex(function(s){ return s && s.slug === slug; });
+    if (idx !== -1) { state.slots[idx] = null; } else { var empty = state.slots.findIndex(function(s){ return !s; }); if (empty === -1) return; state.slots[empty] = firm; }
+    renderTray();
+  }
+  function clearTray(){ state.slots = [null, null, null]; renderTray(); }
+  function renderTray(){
+    var filled = state.slots.filter(Boolean).length;
+    cards.forEach(function(c){
+      var on = state.slots.some(function(s){ return s && s.slug === c.dataset.slug; });
+      c.classList.toggle('compare-on', on);
+      var btn = c.querySelector('.btn-compare'); btn.classList.toggle('on', on);
+    });
+    state.slots.forEach(function(s, i){ var slot = traySlots[i]; slot.textContent = s ? s.monogram : (i+1); slot.classList.toggle('filled', !!s); });
+    trayGo.disabled = filled < 2; trayGo.textContent = 'Compare ' + filled + ' ->';
+    tray.classList.toggle('hidden', filled === 0 || state.view !== 'home');
+    navCount.textContent = filled > 0 ? filled : ''; navCount.style.display = filled > 0 ? 'inline' : 'none';
+    if (state.view === 'compare') renderCompare();
+  }
+  function openModal(slug){
+    var f = BY_SLUG[slug]; if (!f) return;
+    var inCompare = state.slots.some(function(s){ return s && s.slug === slug; });
+    modal.innerHTML = '<button class="modal-close" data-action="close-modal">esc x</button><div class="modal-head"><div class="logo" style="width:56px;height:56px;font-size:18px;">' + f.monogram + '</div><div style="flex:1;"><div class="modal-title">' + f.name + '</div><div style="margin-top:6px;">' + badgeHtml(f.automation) + '</div><p style="color:var(--ink-4);font-size:14px;margin-top:10px;line-height:1.55;">' + f.automation_notes + '</p></div></div><div class="modal-section-title">Headline numbers</div><div class="modal-stats">' + kvHtml('$50K eval', '$' + f.eval_cost_50k + '<span class="sub">/mo</span>') + kvHtml('$100K eval', '$' + f.eval_cost_100k + '<span class="sub">/mo</span>') + kvHtml('Profit split', '<span style="color:var(--good-text);">' + f.payout_split + '%</span>') + kvHtml('Drawdown type', f.drawdown_type === 'trailing' ? 'Trailing' : 'End-of-day') + kvHtml('Profit target (50K)', fmtUSD(f.profit_target_50k)) + kvHtml('Payouts', '<span style="font-size:13px;">' + f.payout_frequency + '</span>') + '</div><div class="modal-section-title">Why traders pick / pass</div><div class="proscons"><ul class="pros">' + f.pros.map(function(p){ return '<li>' + p + '</li>'; }).join('') + '</ul><ul class="cons">' + f.cons.map(function(c){ return '<li>' + c + '</li>'; }).join('') + '</ul></div><div class="modal-section-title">Source policy</div><p style="color:var(--ink-4);font-size:13px;">Rules from <a href="' + f.rules_url + '" target="_blank" rel="noopener">' + f.rules_url + '</a><br/><span style="font-size:12px;color:var(--ink-subtle);">Last verified ' + f.rules_last_checked + '.</span></p><div class="modal-foot"><button class="btn-pill" data-action="modal-compare" data-slug="' + f.slug + '">' + (inCompare ? 'In comparison' : 'Add to compare') + '</button><a class="btn-ghost" href="' + f.rules_url + '" target="_blank" rel="noopener">Read full rules</a></div>';
+    modalScrim.classList.add('show'); document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){ modalScrim.classList.remove('show'); document.body.style.overflow = ''; }
+  function kvHtml(label, value){ return '<div class="kv"><div class="kv-label">' + label + '</div><div class="kv-value">' + value + '</div></div>'; }
+  function badgeHtml(status){ var map = { allowed:['allowed','Allowed'], verify:['verify','Verify'], banned:['banned','Banned'] }; var m = map[status] || map.verify; return '<span class="badge badge-' + m[0] + '"><span class="dot"></span>' + m[1] + '</span>'; }
+  var ROWS = [
+    { label:'$50K evaluation', sub:'Monthly fee', get: function(f){ return '$' + f.eval_cost_50k + '<span class="sub">/mo</span>'; } },
+    { label:'$100K evaluation', sub:'Monthly fee', get: function(f){ return '$' + f.eval_cost_100k + '<span class="sub">/mo</span>'; } },
+    { label:'Account sizes', sub:'Available', get: function(f){ return f.account_sizes.map(fmtSize).join(' / '); } },
+    { label:'Drawdown type', sub:'How losses lock', get: function(f){ return (f.drawdown_type === 'trailing' ? 'Trailing' : 'End-of-day') + '<span class="sub">' + fmtUSD(f.drawdown_amount_50k) + ' on 50K</span>'; } },
+    { label:'Profit target', sub:'On 50K eval', get: function(f){ return fmtUSD(f.profit_target_50k); } },
+    { label:'Min trading days', sub:'Before payout', get: function(f){ return f.min_trading_days || '<span style="color:var(--ink-subtle);">--</span>'; } },
+    { label:'Profit split', sub:"Trader share", get: function(f){ return '<span style="color:var(--good-text);">' + f.payout_split + '%</span>'; } },
+    { label:'Payout frequency', sub:'Cadence', get: function(f){ return f.payout_frequency; } },
+    { label:'Funded account fee', sub:'Monthly', get: function(f){ return f.funded_fee === 0 ? '<span style="color:var(--good-text);">None</span>' : '$' + f.funded_fee + '/mo'; } },
+    { label:'Algorithmic trading', sub:'Bots and EAs', get: function(f){ return ynHtml(f.automation); } },
+    { label:'News trading', sub:'Around releases', get: function(f){ return ynHtml(f.news_trading); } },
+    { label:'Consistency rule', sub:'Daily P&L cap', get: function(f){ return f.consistency_rule === 'none' ? '<span style="color:var(--good-text);">None</span>' : f.consistency_rule; } },
+    { label:'Platforms', sub:'Supported', get: function(f){ return f.platforms.join(' / '); } }
+  ];
+  function ynHtml(status){ if (status === 'allowed') return '<span class="yn yes"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l3.5 3.5L13 5"/></svg> Yes</span>'; if (status === 'banned') return '<span class="yn no"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l8 8M12 4l-8 8"/></svg> No</span>'; return '<span class="yn maybe">Verify</span>'; }
+  function firmOptionsHtml(currentSlug){ return FIRMS.map(function(opt){ var disabled = state.slots.some(function(s){ return s && s.slug === opt.slug && s.slug !== currentSlug; }); return '<option value="' + opt.slug + '"' + (opt.slug === currentSlug ? ' selected' : '') + (disabled ? ' disabled' : '') + '>' + opt.name + '</option>'; }).join(''); }
+  function renderCompare(){
+    var filled = state.slots.filter(Boolean);
+    if (filled.length < 2){ comparePage.innerHTML = '<div class="compare-head"><div><h1>Side-by-side comparison</h1><p>Pick 2 or 3 firms to compare.</p></div><button class="btn-ghost" data-action="back-home">Back to directory</button></div><div class="cmp-empty"><h2>Pick at least two firms</h2><p>Add firms from the directory using the + button on each card.</p></div>'; return; }
+    var featuredSlug = filled.slice().sort(function(a,b){ return a.eval_cost_50k - b.eval_cost_50k; })[0].slug;
+    var colCount = filled.length;
+    var html = '<div class="compare-head"><div><h1>Side-by-side comparison</h1><p>Same data. Same date. No affiliate copy. Cheapest 50K eval highlighted.</p></div><button class="btn-ghost" data-action="back-home">Back to directory</button></div>';
+    html += '<div class="cmp-grid" style="grid-template-columns: 240px repeat(' + colCount + ', minmax(0, 1fr));">';
+    html += '<div class="cmp-corner"><div class="filter-label">Field</div><h3>Evaluation and rules</h3></div>';
+    filled.forEach(function(f, i){ var slotIdx = state.slots.indexOf(f); var isFeat = f.slug === featuredSlug; var isLast = i === filled.length - 1; html += '<div class="cmp-firm-head' + (isFeat ? ' featured' : '') + '" style="' + (isLast ? 'border-right:0;' : '') + '">' + (isFeat ? '<span class="cmp-pop">Cheapest 50K</span>' : '') + '<div class="logo" style="width:56px;height:56px;font-size:18px;margin:0 auto 12px;">' + f.monogram + '</div><div class="name">' + f.name + '</div><div class="sub">' + f.notes + '</div><div class="swap"><select data-action="swap" data-idx="' + slotIdx + '">' + firmOptionsHtml(f.slug) + '</select><button class="swap-x" data-action="remove-slot" data-idx="' + slotIdx + '">x</button></div></div>'; });
+    ROWS.forEach(function(row){ html += '<div class="cmp-cell row-label">' + row.label + '<div class="row-sub">' + row.sub + '</div></div>'; filled.forEach(function(f, i){ var isFeat = f.slug === featuredSlug; var isLast = i === filled.length-1; html += '<div class="cmp-cell value" style="' + (isFeat ? 'background:rgba(99,102,241,0.04);' : '') + (isLast ? 'border-right:0;' : '') + '">' + row.get(f) + '</div>'; }); });
+    html += '<div class="cmp-cell row-label"><span class="filter-label">Pricing</span><h3 style="font-size:14px;color:var(--ink-muted);margin-top:6px;">Starts at</h3></div>';
+    filled.forEach(function(f, i){ var isFeat = f.slug === featuredSlug; var isLast = i === filled.length-1; html += '<div class="cmp-foot' + (isFeat ? ' featured' : '') + '" style="' + (isLast ? 'border-right:0;' : '') + '"><div class="price-cap">From</div><div class="price">$' + f.eval_cost_50k + '<span class="small">/mo</span></div><a class="cmp-cta' + (isFeat ? ' primary' : '') + '" href="' + f.rules_url + '" target="_blank" rel="noopener">Read rules</a></div>'; });
+    html += '</div><div class="disclaimer" style="padding:32px 0 0;"><div class="disclaimer-inner"><strong>Verify before purchase.</strong> Rules change frequently. Always confirm automation policy directly with the firm before buying. Last verified May 2026.</div></div>';
+    comparePage.innerHTML = html;
+  }
+  function setView(v){ state.view = v; homeSection.classList.toggle('hidden', v !== 'home'); comparePage.classList.toggle('show', v === 'compare'); document.getElementById('nav-tracker').classList.toggle('on', v === 'home'); document.getElementById('nav-compare').classList.toggle('on', v === 'compare'); if (v === 'compare') renderCompare(); renderTray(); window.scrollTo(0, 0); }
+  document.addEventListener('click', function(e){ var t = e.target.closest('[data-action]'); if (!t){ if (e.target === modalScrim) closeModal(); return; } var action = t.dataset.action; if (action === 'detail') openModal(t.dataset.slug); else if (action === 'compare') toggleCompare(t.dataset.slug); else if (action === 'modal-compare'){ toggleCompare(t.dataset.slug); openModal(t.dataset.slug); } else if (action === 'close-modal') closeModal(); else if (action === 'tray-go') setView('compare'); else if (action === 'tray-clear') clearTray(); else if (action === 'nav-home') setView('home'); else if (action === 'nav-compare') setView('compare'); else if (action === 'back-home') setView('home'); else if (action === 'remove-slot'){ state.slots[parseInt(t.dataset.idx,10)] = null; renderTray(); } });
+  document.addEventListener('change', function(e){ var t = e.target.closest('[data-action]'); if (!t) return; if (t.dataset.action === 'swap' || t.dataset.action === 'picker'){ var idx = parseInt(t.dataset.idx, 10); state.slots[idx] = t.value ? BY_SLUG[t.value] : null; renderTray(); } });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeModal(); });
+  bindFilters(); applyFilters(); renderTray();
+})();
+</script>
+</body>
+</html>
