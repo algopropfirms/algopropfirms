@@ -17,7 +17,7 @@ import BlogPost from '../../layouts/BlogPost.astro';
 
 <p>The critical implication: <strong>unrealized profits count.</strong> At firms using trailing drawdown, your drawdown threshold moves up based on your highest intraday equity — not just closed trades. If your bot holds a position that goes up $1,500 before stopping out at breakeven, your floor has permanently moved up $1,500.</p>
 
-<p>Firms using trailing drawdown: Apex, Topstep, MyFundedFutures.</p>
+<p>Firms using trailing drawdown: <a href="/">Apex Trader Funding</a>, <a href="/">Topstep</a>, <a href="/">MyFundedFutures</a>, <a href="/">TradeDay</a>, <a href="/">Bulenox</a>, <a href="/">OneUp Trader</a>, <a href="/">Leeloo Trading</a>.</p>
 
 <h2>How End-of-Day Drawdown Works</h2>
 
@@ -27,13 +27,13 @@ import BlogPost from '../../layouts/BlogPost.astro';
 
 <p>Only <strong>net profitable days</strong> move your EOD floor up. If the session closes above your previous end-of-day equity, the floor rises. If it closes flat or down, the floor stays where it is (as long as you haven't hit it).</p>
 
-<p>Firms using EOD drawdown: Take Profit Trader, TradeDay.</p>
+<p>Firms using EOD drawdown: <a href="/">Take Profit Trader</a>, <a href="/">BluSky Trading</a>, <a href="/">Lucid Trading</a>, <a href="/">UProfit</a>, <a href="/">Alpha Futures</a>, <a href="/">The Trading Pit Futures</a>, <a href="/">Funded Futures Network</a>, <a href="/">Purdia Capital</a>, <a href="/">FundedNext Futures</a>, <a href="/">Earn2Trade Gauntlet</a>.</p>
 
 <h2>Which Is Better for Algo Bots?</h2>
 
 <p>The answer depends on your bot's behavior:</p>
 
-<h3>Choose EOD drawdown (TPT or TradeDay) if:</h3>
+<h3>Choose EOD drawdown if:</h3>
 <ul>
   <li>Your bot has significant intraday drawdown before winning</li>
   <li>Your strategy holds positions through intraday fluctuations</li>
@@ -41,7 +41,9 @@ import BlogPost from '../../layouts/BlogPost.astro';
   <li>You're running a mean-reversion or longer-duration strategy</li>
 </ul>
 
-<h3>Choose trailing drawdown (Apex, Topstep, MFFU) if:</h3>
+<p>Best EOD options for algo traders: <a href="/">Take Profit Trader</a> (no consistency rule, no daily loss limit), <a href="/">BluSky Trading</a> (bot-friendly with path to live account), <a href="/">Lucid Trading</a> (one-time fee, zero daily loss limit on LucidFlex).</p>
+
+<h3>Choose trailing drawdown if:</h3>
 <ul>
   <li>Your bot has tight intraday drawdown relative to its wins</li>
   <li>Your strategy takes profits quickly and doesn't hold large open positions</li>
@@ -49,11 +51,17 @@ import BlogPost from '../../layouts/BlogPost.astro';
   <li>Your bot's ratio of realized profit to intraday peak is high</li>
 </ul>
 
+<p>Best trailing options for algo traders: <a href="/">Apex Trader Funding</a> (no consistency rule, 100% payout, 20 accounts), <a href="/">Topstep</a> (cheapest $50K eval at $149/mo), <a href="/">MyFundedFutures</a> (no funded fee, but has 30% consistency rule).</p>
+
 <h2>The Trailing Drawdown Trap for Bots</h2>
 
 <p>The most common way algo traders get eliminated on trailing drawdown is the "phantom progress" problem. The bot accumulates a large open profit — say $2,000 — on a position that then stops out for a small gain of $200. The trailing floor has moved up $2,000, but the account only has $200 more equity. The bot is now $1,800 closer to elimination than it was before the trade, even though the trade was profitable.</p>
 
 <p>For bots using trailing stops or profit targets, this can be managed by setting tight trailing stops once a position is in profit. For bots that let winners run, trailing drawdown can create invisible risk.</p>
+
+<h2>A Special Case: The Trading Pit Futures</h2>
+
+<p><a href="/">The Trading Pit Futures</a> uses EOD drawdown with an unusual feature: the drawdown floor permanently stops trailing once your account becomes profitable. This means once your account equity exceeds its starting value, the floor locks at the starting balance and never rises again. For bots that take time to build consistent profits, this eliminates the risk of the floor creeping up during a slow ramp phase.</p>
 
 <h2>Practical Test Before Choosing</h2>
 
@@ -66,7 +74,7 @@ import BlogPost from '../../layouts/BlogPost.astro';
 <p>The ratio of MFE to exit P&L tells you how much "phantom progress" your bot creates on trailing drawdown. If your average trade has an MFE 3x its exit profit, trailing drawdown will eat your buffer much faster than EOD drawdown.</p>
 
 <div class="cta">
-  <p>Compare drawdown types across all five algo-friendly prop firms.</p>
+  <p>Compare drawdown types across all 19 tracked prop firms — filter by drawdown type, automation status, and platform.</p>
   <a href="/">View Full Comparison Table →</a>
 </div>
 

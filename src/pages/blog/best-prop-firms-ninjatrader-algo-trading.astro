@@ -1,0 +1,163 @@
+---
+import BlogPost from '../../layouts/BlogPost.astro';
+---
+<BlogPost
+  title="Best Prop Firms for NinjaTrader Algo Traders (2026)"
+  description="Which futures prop firms support NinjaTrader and allow automated trading? We compare all NinjaTrader-compatible firms on automation rules, costs, drawdown types, and what to watch out for."
+  pubDate="May 9, 2026"
+>
+
+<p>NinjaTrader is one of the most popular platforms for building and running automated futures trading strategies. Its built-in strategy engine, NinjaScript, lets traders deploy fully automated systems directly to a connected broker — making it a natural choice for algo traders looking to pass a prop firm evaluation without switching platforms.</p>
+
+<p>The problem: not all prop firms support NinjaTrader, and not all firms that support it actually allow automated strategies. This guide covers every firm that checks both boxes.</p>
+
+<h2>Which Prop Firms Support NinjaTrader AND Allow Automation?</h2>
+
+<p>Of the 19 firms we track, 12 support NinjaTrader. Of those 12, here are the ones that explicitly allow or are likely to allow automated trading:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Firm</th>
+      <th>Automation</th>
+      <th>$50K Eval</th>
+      <th>Drawdown</th>
+      <th>Payout Split</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><a href="/">Apex Trader Funding</a></strong></td>
+      <td><span class="badge badge-allowed">Allowed</span></td>
+      <td>$167/mo</td>
+      <td>Trailing</td>
+      <td>100%</td>
+    </tr>
+    <tr>
+      <td><strong><a href="/">Topstep</a></strong></td>
+      <td><span class="badge badge-allowed">Allowed</span></td>
+      <td>$149/mo</td>
+      <td>Trailing</td>
+      <td>100%</td>
+    </tr>
+    <tr>
+      <td><strong><a href="/">BluSky Trading</a></strong></td>
+      <td><span class="badge badge-allowed">Allowed</span></td>
+      <td>$160/mo</td>
+      <td>End-of-Day</td>
+      <td>90%</td>
+    </tr>
+    <tr>
+      <td><strong><a href="/">Lucid Trading</a></strong></td>
+      <td><span class="badge badge-allowed">Allowed</span></td>
+      <td>$175 (one-time)</td>
+      <td>End-of-Day</td>
+      <td>90%</td>
+    </tr>
+    <tr>
+      <td><strong><a href="/">Funded Futures Network</a></strong></td>
+      <td><span class="badge badge-allowed">Allowed</span></td>
+      <td>$150/mo</td>
+      <td>End-of-Day</td>
+      <td>80%</td>
+    </tr>
+    <tr>
+      <td><strong><a href="/">Purdia Capital</a></strong></td>
+      <td><span class="badge badge-allowed">Allowed</span></td>
+      <td>$179/mo</td>
+      <td>End-of-Day</td>
+      <td>90%</td>
+    </tr>
+    <tr>
+      <td><strong><a href="/">Elite Trader Funding</a></strong></td>
+      <td><span class="badge badge-verify">Verify</span></td>
+      <td>$165/mo</td>
+      <td>Trailing</td>
+      <td>90%</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>NinjaTrader and Automation: How It Works</h2>
+
+<p>NinjaTrader connects to prop firm brokers primarily through two data/execution feeds: <strong>Rithmic</strong> and <strong>Tradovate</strong>. Most NinjaTrader-compatible prop firms route through one or both of these. When you deploy an automated NinjaScript strategy in NinjaTrader, it executes orders directly through whichever connection is active.</p>
+
+<p>This means your automation lives entirely inside NinjaTrader — you don't need a separate API integration or third-party webhook service. If the prop firm supports NinjaTrader and allows automated strategies, you're good to go with your existing setup.</p>
+
+<p>One thing to verify: NinjaTrader's free version limits live trading to Rithmic connections only. The paid license ($1,099 one-time or $60/mo) unlocks Tradovate and other connections. Check which connection your chosen firm requires before purchasing.</p>
+
+<h2>Firm-by-Firm Breakdown</h2>
+
+<h3>Apex Trader Funding — Best for Scaling</h3>
+
+<p><a href="/">Apex</a> explicitly allows automated trading, DCA bots, and semi-automated systems. It supports NinjaTrader via Rithmic and has no consistency rule — a significant advantage for algo strategies with variable daily performance. Apex allows up to 20 simultaneous funded accounts, which is the clearest path to scaling a proven NinjaTrader strategy across multiple accounts running in parallel.</p>
+
+<p>The drawdown is trailing at $2,500 on the $50K eval. This means intraday open profits move your drawdown floor up, which creates risk for strategies that hold positions through significant open-profit swings before exiting. See our guide on <a href="/blog/trailing-vs-eod-drawdown-algo-bots">trailing vs EOD drawdown for algo bots</a> to understand the difference.</p>
+
+<h3>Topstep — Best for Low Entry Cost</h3>
+
+<p><a href="/">Topstep</a> supports NinjaTrader via Tradovate and allows automated trading (no VPS restriction on new accounts). At $149/mo for the $50K eval, it's the cheapest entry among NinjaTrader-compatible firms that explicitly allow automation. No consistency rule. Weekly payouts with 100% split on the first $10K/month.</p>
+
+<p>Topstep does not publish a specific multi-account limit, which makes large-scale bot deployment less clean than Apex's explicit 20-account policy.</p>
+
+<h3>BluSky Trading — Best for EOD Drawdown</h3>
+
+<p><a href="/">BluSky Trading</a> is one of the few firms that explicitly endorses automated trading in its marketing, not just buried in its terms. It supports NinjaTrader and uses EOD drawdown — much more forgiving for strategies with intraday volatility. Only 4 minimum trading days to pass the evaluation. Same-day daily payouts once funded. There's also a four-stage progression path that eventually leads to a real live brokerage account.</p>
+
+<p>The one limitation: only 2 funded accounts can be active simultaneously, which caps how far you can scale a NinjaTrader strategy without switching firms.</p>
+
+<h3>Lucid Trading — Best for No Monthly Subscription</h3>
+
+<p><a href="/">Lucid Trading</a> charges a one-time evaluation fee instead of a monthly subscription — you pay once and trade until you pass or breach, with no recurring charges. It supports NinjaTrader, uses EOD drawdown, and the LucidFlex track has zero daily loss limit and zero consistency rule. Payout processing averages 15 minutes.</p>
+
+<p>The trade-off: Lucid launched in 2025 and has restructured its product lineup multiple times since then. Limited track record through extended market stress compared to Apex or Topstep.</p>
+
+<h3>Funded Futures Network — Best for Daily Payouts</h3>
+
+<p><a href="/">Funded Futures Network</a> allows bots as long as they aren't HFT. It supports NinjaTrader and uses EOD drawdown. The standout feature is same-day payouts in the Funded-Pro stage. If your NinjaTrader strategy generates consistent daily profits, FFN's daily payout structure lets you pull money out faster than any other firm on this list.</p>
+
+<p>Cost of ownership is higher than it looks: a $126/month data fee applies once funded, and the profit split is 80/20 rather than the 90/10 standard.</p>
+
+<h3>Purdia Capital — Best for Path to Real Capital</h3>
+
+<p><a href="/">Purdia Capital</a> transitions funded traders to genuine live accounts with real capital, not indefinite simulation. It supports NinjaTrader and allows semi-automated algorithmic trading. EOD drawdown, no consistency rule, and a soft daily loss limit that pauses trading rather than terminating your account. Maximum account size is $100K, which limits scaling potential.</p>
+
+<h3>Elite Trader Funding — Verify Before Buying</h3>
+
+<p><a href="/">Elite Trader Funding</a> supports NinjaTrader with an extensive platform list and has approved some automation partners (such as TradersPost via Tradovate). However, its terms state that bots and trade copiers are prohibited unless expressly authorized in writing. This is a "verify" firm — contact ETF's support before purchasing if you plan to run a NinjaTrader automated strategy.</p>
+
+<h2>NinjaTrader Firms That Ban Automation</h2>
+
+<p>Two NinjaTrader-compatible firms explicitly ban automated trading:</p>
+
+<ul>
+  <li><a href="/">Leeloo Trading</a> — explicitly prohibits bots and algos on all performance accounts. NinjaTrader is supported but manual execution only.</li>
+  <li><a href="/">OneUp Trader</a> — explicit ban on algorithmic and automated trading, stated directly on their website. NinjaTrader is supported via Rithmic but for manual use only.</li>
+  <li><a href="/">Earn2Trade Gauntlet</a> — explicit ban on EAs, bots, and copy trading. Supports NinjaTrader via Finamark but manual only.</li>
+</ul>
+
+<p>These firms are worth knowing about because they appear in NinjaTrader-related searches, but they're not suitable for algo traders.</p>
+
+<h2>Which NinjaTrader Prop Firm Should You Choose?</h2>
+
+<ul>
+  <li><strong>Your bot has intraday drawdown before winning:</strong> <a href="/">BluSky Trading</a> or <a href="/">Lucid Trading</a> — EOD drawdown is more forgiving</li>
+  <li><strong>You want to scale to many accounts:</strong> <a href="/">Apex Trader Funding</a> — explicit 20-account limit, 100% payout</li>
+  <li><strong>Lowest monthly cost to get started:</strong> <a href="/">Topstep</a> at $149/mo</li>
+  <li><strong>No monthly subscription:</strong> <a href="/">Lucid Trading</a> — one-time eval fee</li>
+  <li><strong>Daily payouts matter:</strong> <a href="/">Funded Futures Network</a> — same-day payouts in funded stage</li>
+  <li><strong>You want a real live account, not simulation:</strong> <a href="/">Purdia Capital</a> or <a href="/">BluSky Trading</a></li>
+</ul>
+
+<p>For a complete breakdown of all 19 firms including those that don't support NinjaTrader, see the <a href="/blog/best-prop-firms-algo-trading-2026">full guide to algo-friendly prop firms in 2026</a>.</p>
+
+<div class="cta">
+  <p>Filter the full tracker by platform to see every NinjaTrader-compatible firm side by side.</p>
+  <a href="/">View Full Comparison Table →</a>
+</div>
+
+<div class="disclaimer">
+  <strong>Important:</strong> Platform support and automation rules verified May 2026. Rules change frequently — always confirm directly with the firm before purchasing an evaluation.
+</div>
+
+</BlogPost>

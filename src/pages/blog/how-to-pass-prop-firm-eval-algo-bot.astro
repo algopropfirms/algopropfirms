@@ -14,11 +14,13 @@ import BlogPost from '../../layouts/BlogPost.astro';
 <p>Not all firms that allow automation are equal for your specific strategy. Before paying for an evaluation, answer these questions about your bot:</p>
 
 <ul>
-  <li><strong>What is your bot's average intraday drawdown?</strong> If high, choose EOD drawdown (Take Profit Trader or TradeDay)</li>
-  <li><strong>Does your bot have consistent daily returns or occasional large days?</strong> If inconsistent, avoid firms with consistency rules (MFFU has a 30% rule)</li>
+  <li><strong>What is your bot's average intraday drawdown?</strong> If high, choose EOD drawdown — <a href="/">Take Profit Trader</a>, <a href="/">BluSky Trading</a>, <a href="/">Lucid Trading</a>, or <a href="/">Purdia Capital</a></li>
+  <li><strong>Does your bot have consistent daily returns or occasional large days?</strong> If inconsistent, avoid firms with consistency rules (<a href="/">MyFundedFutures</a> has a 30% rule)</li>
   <li><strong>How many contracts does your bot trade?</strong> Each firm has contract limits during evaluation</li>
-  <li><strong>What platform does your bot run on?</strong> Tradovate is the most API-friendly; check compatibility</li>
+  <li><strong>What platform does your bot run on?</strong> Tradovate is the most API-friendly; check compatibility before purchasing</li>
 </ul>
+
+<p>See the <a href="/blog/best-prop-firms-algo-trading-2026">full guide to algo-friendly prop firms</a> for a side-by-side breakdown of all 8 firms that currently allow automation.</p>
 
 <h2>Step 2: Size Your Bot's Risk to Evaluation Rules</h2>
 
@@ -28,15 +30,17 @@ import BlogPost from '../../layouts/BlogPost.astro';
 
 <p>Example: Apex $50K evaluation has $2,500 trailing drawdown. If your bot's backtested max drawdown is $1,800 at standard sizing, reduce size by 30% so your expected max drawdown is around $1,260. You now have meaningful buffer.</p>
 
-<h2>Step 3: Account for Trailing Drawdown in Your Live Configuration</h2>
+<h2>Step 3: Account for Drawdown Type in Your Live Configuration</h2>
 
-<p>If you're at a firm with trailing drawdown (Apex, Topstep, MFFU), your bot needs to be aware that open profits reduce your effective buffer. Consider these adjustments:</p>
+<p>If you're at a firm with trailing drawdown (<a href="/">Apex</a>, <a href="/">Topstep</a>, <a href="/">MyFundedFutures</a>), your bot needs to be aware that open profits reduce your effective buffer. Consider these adjustments:</p>
 
 <ul>
   <li>Add a profit-lock rule: once a position is up X ticks, move stop to breakeven</li>
   <li>Reduce maximum open position size during the evaluation phase</li>
   <li>Avoid running the bot during high-volatility news events where open positions can spike and reverse</li>
 </ul>
+
+<p>If you're at a firm with EOD drawdown (<a href="/">Take Profit Trader</a>, <a href="/">BluSky Trading</a>, <a href="/">Lucid Trading</a>, <a href="/">Funded Futures Network</a>), your intraday behavior is much more forgiving — focus on ensuring the session doesn't close below your EOD floor. Read our breakdown of <a href="/blog/trailing-vs-eod-drawdown-algo-bots">trailing vs EOD drawdown for algo bots</a> for the full explanation.</p>
 
 <h2>Step 4: Handle the Evaluation Profit Target</h2>
 
@@ -45,12 +49,12 @@ import BlogPost from '../../layouts/BlogPost.astro';
 <ul>
   <li><strong>Don't force trades:</strong> Bots that trade every day regardless of conditions will degrade performance. If your strategy has a signal filter, keep it active during evaluation.</li>
   <li><strong>Time limits:</strong> Some firms have no time limit (Topstep's subscription model). Others have 30 or 60-day windows. Know your firm's rules.</li>
-  <li><strong>Minimum trading days:</strong> Most firms require a minimum number of profitable trading days (typically 5+). Your bot needs to trade at least that many days.</li>
+  <li><strong>Minimum trading days:</strong> Most firms require a minimum number of profitable trading days. <a href="/">Lucid Trading</a> requires only 2. <a href="/">Apex</a> requires just 1. Most others require 5-10. Your bot needs to trade at least that many days.</li>
 </ul>
 
 <h2>Step 5: Use Multiple Evaluation Accounts</h2>
 
-<p>One of the biggest advantages of algo trading at prop firms is the ability to run the same bot across multiple evaluation accounts simultaneously. Firms like Apex explicitly allow this.</p>
+<p>One of the biggest advantages of algo trading at prop firms is the ability to run the same bot across multiple evaluation accounts simultaneously. Firms like <a href="/">Apex Trader Funding</a> explicitly allow up to 20 accounts.</p>
 
 <p>Instead of buying one $250 evaluation, buy five $50 evaluations. Run your bot across all five accounts with account synchronization. The bot trades identically on all accounts. When some accounts pass and some don't (due to timing of entry on each account), you're effectively spreading the statistical variance of your evaluation outcomes.</p>
 
@@ -68,20 +72,22 @@ import BlogPost from '../../layouts/BlogPost.astro';
 <p>A bot that looks great on historical data may fail on live data if the backtest was overfitted. Use out-of-sample data for validation before trusting a bot with a real evaluation.</p>
 
 <h3>Failure mode 4: Ignoring trading hour restrictions</h3>
-<p>Some firms restrict trading around major news events. Make sure your bot either avoids these windows or is configured to not trade during restricted times. An automated position opened during a prohibited window can result in account violation.</p>
+<p>Some firms restrict trading around major news events. <a href="/">The Trading Pit Futures</a> bans news trading 2 minutes before and after releases — violations result in immediate termination. <a href="/">Funded Futures Network</a> also bans news trading. Make sure your bot either avoids these windows or is configured to not trade during restricted times.</p>
 
 <h2>Which Firm to Start With</h2>
 
 <p>For most algo traders running their first prop firm evaluation:</p>
 
 <ul>
-  <li><strong>Most forgiving for bots with drawdown:</strong> Take Profit Trader (EOD drawdown, no daily loss limit)</li>
-  <li><strong>Best for scaling once proven:</strong> Apex (20 simultaneous accounts, 100% payout)</li>
-  <li><strong>Lowest entry cost:</strong> Topstep at $149/mo for $50K</li>
+  <li><strong>Most forgiving for bots with drawdown:</strong> <a href="/">Take Profit Trader</a> (EOD drawdown, no daily loss limit, no consistency rule)</li>
+  <li><strong>Best for scaling once proven:</strong> <a href="/">Apex Trader Funding</a> (20 simultaneous accounts, 100% payout)</li>
+  <li><strong>Lowest entry cost:</strong> <a href="/">Topstep</a> at $149/mo for $50K</li>
+  <li><strong>No monthly subscription:</strong> <a href="/">Lucid Trading</a> (one-time fee, only 2 minimum trading days)</li>
+  <li><strong>Explicitly bot-friendly with path to live capital:</strong> <a href="/">BluSky Trading</a> or <a href="/">Purdia Capital</a></li>
 </ul>
 
 <div class="cta">
-  <p>Compare evaluation rules, costs, and automation policies across all five firms.</p>
+  <p>Compare evaluation rules, costs, and automation policies across all 19 tracked firms.</p>
   <a href="/">View Full Comparison Table →</a>
 </div>
 
