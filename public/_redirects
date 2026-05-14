@@ -1,0 +1,10 @@
+# Redirect www to non-www (fixes "Duplicate without user-selected canonical" in GSC)
+https://www.algopropfirms.com/* https://algopropfirms.com/:splat 301
+
+# Redirect no-trailing-slash blog URLs to trailing-slash (fixes "Redirect error" in GSC)
+/blog/myfundedfutures-automation-rules /blog/myfundedfutures-automation-rules/ 301
+/blog/apex-vs-topstep-algo-traders /blog/apex-vs-topstep-algo-traders/ 301
+/blog/best-prop-firms-algo-trading-2026 /blog/best-prop-firms-algo-trading-2026/ 301
+/blog/how-to-pass-prop-firm-eval-algo-bot /blog/how-to-pass-prop-firm-eval-algo-bot/ 301
+/blog/trailing-vs-eod-drawdown-algo-bots /blog/trailing-vs-eod-drawdown-algo-bots/ 301
+/blog/best-prop-firms-ninjatrader-algo-trading /blog/best-prop-firms-ninjatrader-algo-trading/ 301
